@@ -52,7 +52,7 @@ I am going to use the required technologies in the following ways.
               in response to certain conditions, such as when a user logs in or joins a game.
 - **Service** - A backend service will handle user authentication, 
                 I also plan to use the [GeoPlugin](https://www.geoplugin.net) API to provide users 
-                information about where the location their game was started in.
+                information about where their game was started in.
 - **DB/Login** - A database will be used to store authentication information, as well as information about ongoing and finished games.
 - **WebSocket** - As the game is being played, all clients will maintain a model of the game world around them, including positions of all nearby objects.
                   Additionally, the server will maintain its own "authoritative" model. WebSocket is used to synchronize the client models with the server model,
@@ -65,7 +65,7 @@ I am going to use the required technologies in the following ways.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://yourdomainnamehere.click).
+- [x] **Server deployed and accessible with custom domain name** - [My server link](https://startup.pizzasco.lol).
 
 ## HTML deliverable
 
