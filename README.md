@@ -5,7 +5,12 @@
 This app uses a simple multiplayer video game to facilitate some good old-fashioned might-makes-right consensus building in real time.
 Before the start of the game, users will be asked a (low-stakes) question with two possible answers, such as "does pineapple belong on pizza?"
 Users then compete in the role of monkeys attempting to throw bananas at each other to elevate their ideological perspective above all others.
-After the game is over, users can head over to the "new laws" tab to view a listing of the most recent outcomes. 
+After the game is over, users can head over to the "new laws" tab to view a listing of the most recent outcomes.
+
+## Project Structure
+
+For the first few deliverables (before React is introduced), all of the code will be located in the `static_content` directory.
+Until then, the other directories will contain ongoing work on the parts of the project I anticipate to take the longest.
 
 ## Specification Deliverable
 
