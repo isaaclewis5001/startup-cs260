@@ -1,15 +1,22 @@
-# The Law of the Jungle (CS 260 Project)
+# The Law of the Jungle
 
 [My Notes](notes.md)
 
-This app uses a simple multiplayer video game to facilitate some good old-fashioned might-makes-right consensus building in real time.
-Before the start of the game, users will be asked a (low-stakes) question with two possible answers, such as "does pineapple belong on pizza?"
-Users then compete in the role of monkeys attempting to throw bananas at each other to elevate their ideological perspective above all others.
-After the game is over, users can head over to the "new laws" tab to view a listing of the most recent outcomes.
+A game about some very opinionated monkeys.
+The core gameplay is relatively simple: throw bananas at the other team, while avoiding getting hit yourself.
+Each game has a question associated with it; the winning team determines the answer.
+Users will be able to log in, create and join rooms, and view recent game results.
+
+There will definitely be some technical challenges implementing this, such as synchronizing the game state between players and
+the server, and determining which pairs of objects intersect in an efficient manner.
+I understand that this is beyond the scope of what is required this class,
+but I am somewhat familiar with all of the course technologies already.
+I want to come away from this class having created something I can really be proud of
+and will be a better demonstration of my skills in case I decide to use it in a portfolio someday.
 
 ## Project Structure
 
-For the first few deliverables (before React is introduced), all of the code will be located in the `static_content` directory.
+For the first few deliverables (before React is introduced), all of the relevant code for grading will be located in the `static_content` directory.
 Until then, the other directories will contain ongoing work on the parts of the project I anticipate to take the longest.
 
 ## Specification Deliverable
@@ -17,27 +24,28 @@ Until then, the other directories will contain ongoing work on the parts of the 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [x] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
+- [x] A concise and compelling elevator pitch
 - [x] Description of key features
 - [x] Description of how you will use each technology
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+One of the foundational pillars of any society is consensus. As we have transitioned into the information age,
+it has become apparent that technology can assist us in establishing and stabilizing social consensus.
+Some CS 260 apps I could mention rely on the will the masses to build this consensus---a completely upside-down approach (see disclaimer).
+This app attempts to provide an alternative to digital democracy: some good old-fashioned might-makes-right autocracy, all in real time!
+Users compete in the role of monkeys to establish their ideological dominance by throwing bananas at one another until they are the last one standing.
+After the game is over, users can head over to the "new laws" tab to view a listing of all the recent decisions that have been made.
+
+#### Disclaimer
+
+This worldview is a work of fiction. Any resemblance to real ideologies, living or dead, is completely satirical.
 
 ### Design
 
-![Design image](placeholder.png)
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-```mermaid
-sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: "TODO"
-```
+![Design image 1](design1.jpg)
+![Design image 2](design2.jpg)
 
 ### Key features
 
@@ -51,10 +59,13 @@ I am going to use the required technologies in the following ways.
 
 - **HTML** - HTML will be used to provide the proper page content and structure to support the application.
              The login, laws, create game, join game, and in-game pages will all require their own HTML content.
+             The game will be rendered using a WebGL-enabled canvas element.
 - **CSS** - CSS will be used to provide styling and animation for the content of the various pages in the site.
-- **React** - React will help to pull out shared content from the various pages in use.
+- **React** - React will help to pull out shared content from the various pages into reusable components.
               Additionally, React will be used to route users between the different pages
               in response to certain conditions, such as when a user logs in or joins a game.
+              I will likely have to use react effects in order to continually redraw the game content
+              in a way that plays nicely with the react framework.
 - **Service** - A backend service will handle user authentication, 
                 I also plan to use the [GeoPlugin](https://www.geoplugin.net) API to provide users 
                 information about where their game was started in.
@@ -62,9 +73,6 @@ I am going to use the required technologies in the following ways.
 - **WebSocket** - As the game is being played, all clients will maintain a model of the game world around them, including positions of all nearby objects.
                   Additionally, the server will maintain its own "authoritative" model. WebSocket is used to synchronize the client models with the server model,
                   as well as informing the server of each individual user's actions.
-                  I understand that this is beyond the scope of what is required this class, but I am somewhat familiar with all of these technologies already
-                  and would like to use them to accomplish something that will be both more interesting for me to implement and more impressive from a
-                  technical standpoint if I decide to use it in a portfolio someday.
 
 ## AWS deliverable
 
