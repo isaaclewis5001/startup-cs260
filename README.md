@@ -17,7 +17,7 @@ and will be a better demonstration of my skills in case I decide to use it in a 
 ## Project Structure
 
 For the first few deliverables (before React is introduced), all of the relevant code for grading will be located in the `static_content` directory.
-Until then, the other directories will contain ongoing work on the parts of the project I anticipate to take the longest.
+Until then, the other directories will contain ongoing work on the parts of the project I wanted to get started on early.
 
 ## Specification Deliverable
 
