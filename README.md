@@ -33,14 +33,10 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 One of the foundational pillars of any society is consensus. As we have transitioned into the information age,
 it has become apparent that technology can assist us in establishing and stabilizing social consensus.
-Some CS 260 apps I could mention rely on the will the masses to build this consensus---a completely upside-down approach (see disclaimer).
+Some CS 260 apps I could mention rely on the will the masses to build this consensus, which some might argue to be the incorrect approach (not me though).
 This app attempts to provide an alternative to digital democracy: some good old-fashioned might-makes-right autocracy, all in real time!
 Users compete in the role of monkeys to establish their ideological dominance by throwing bananas at one another until they are the last one standing.
 After the game is over, users can head over to the "new laws" tab to view a listing of all the recent decisions that have been made.
-
-#### Disclaimer
-
-This worldview is a work of fiction. Any resemblance to real ideologies, living or dead, is completely satirical.
 
 ### Design
 
