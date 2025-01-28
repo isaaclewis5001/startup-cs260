@@ -14,8 +14,8 @@
           Logged in as<br>
           <b>Bobby'); DROP TABLE User --</b>
         </div>
-        <a href="./login.html">Login</a>
-        <a href="./index.html">Logout</a>
+        <a href="./login.html">Log In</a>
+        <a href="./index.html">Log Out</a>
       </div>
       <nav>
         <ul>
@@ -26,20 +26,17 @@
       </nav>
     </header>
     <main>
-      <div>
-      <input type="text" placeholder="Room ID"></input>
-      <button>Join Room</button>
-      <br>
-      or
-      <br>
-      <input type="text" placeholder="Game Question"></input>
-      <input type="text" placeholder="Answer 1"></input>
-      <input type="text" placeholder="Answer 2"></input>
-      <button>Create Room</button>
+      <div class="vcentered-form">
+        <label for="inputUsername">Username</label> <input type="text" placeholder="username" id="inputUsername"></input><br>
+        <label for="inputEmail">Password</label> <input type="password" placeholder="password" id="inputPassword"></input><br>
+        <label for="inputPassword">Password</label> <input type="password" placeholder="password" id="inputPassword"></input><br>
+
+        <button>Sign up</button><br>
+      
+        Already have an account?<br>
+        <a href="./login.html">Log in</a>
       </div>
-      If successful, users are routed <a href="./game.html">here</a><br>
-      <!--might add some fun background stuff here if I finish early-->
-      <canvas style="border:1px solid black;"></canvas>
+
     </main>
     <footer>
       <span>&copy 2025 Isaac Lewis</span>
