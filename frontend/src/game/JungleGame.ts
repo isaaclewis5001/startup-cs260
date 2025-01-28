@@ -73,10 +73,6 @@ function frameLoop(state: JungleGameState) {
   requestAnimationFrame(frame);
 }
 
-
-
-
-
 class KBController implements KeyboardController {
   keyDown(event: KeyboardEvent): boolean {
     console.log(event.code);
