@@ -2,29 +2,31 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
     <header>
-      <div>
-        <img src="./monkey_still_life.png">
-        <h1>The Law of the Jungle</h1>
-      </div>
-      <div>
-        <div>
-          Logged in as<br>
-          <b>Bobby'); DROP TABLE User --</b>
+      <div class="header-bounds">
+        <div class="left-content">
+          <img src="./monkey_still_life.png" class="page-logo crisp-image">
+          <h1>The Law of the Jungle</h1>
         </div>
-        <a href="./login.html">Login</a>
-        <a href="./index.html">Logout</a>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="./index.html">Home</a></li>
-          <li><a href="./about.html">About</a></li>
-          <li><a href="./laws.html">Laws</a></li>
-        </ul>
-      </nav>
+        <div class="right-content">
+          <div>
+            Logged in as<br>
+            <b>Bobby</b>
+          </div>
+          <button href="./login.html" class="light-button">Login</a>
+        </div>
+      <div>
     </header>
+    <nav>
+      <ul>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./about.html">About</a></li>
+        <li><a href="./laws.html">Laws</a></li>
+      </ul>
+    </nav>
     <main>
       <div class="vcentered-form">
         <label for="inputUsername">Username</label> <input type="text" placeholder="username" id="inputUsername"></input><br>

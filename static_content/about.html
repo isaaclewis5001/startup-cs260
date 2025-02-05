@@ -2,29 +2,31 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
     <header>
-      <div>
-        <img src="./monkey_still_life.png">
-        <h1>The Law of the Jungle</h1>
-      </div>
-      <div>
-        <div>
-          Logged in as<br>
-          <b>Bobby'); DROP TABLE User --</b>
+      <div class="header-bounds">
+        <div class="left-content">
+          <img src="./monkey_still_life.png" class="page-logo crisp-image">
+          <h1>The Law of the Jungle</h1>
         </div>
-        <a href="./login.html">Login</a>
-        <a href="./index.html">Logout</a>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="./index.html">Home</a></li>
-          <li><a href="./about.html">About</a></li>
-          <li><a href="./laws.html">Laws</a></li>
-        </ul>
-      </nav>
+        <div class="right-content">
+          <div>
+            Logged in as<br>
+            <b>Bobby</b>
+          </div>
+          <button href="./login.html" class="light-button">Login</a>
+        </div>
+      <div>
     </header>
+    <nav>
+      <ul>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./about.html">About</a></li>
+        <li><a href="./laws.html">Laws</a></li>
+      </ul>
+    </nav>
     <main>
       Lame images here for HTML and CSS deliverables, actual images used will be rendered with WebGL as part of the game.
     
@@ -82,7 +84,7 @@
       <p>
         You hurl the banana directly into the forehead of the nearest dissenter, knocking them out instantly.
         Reaching into the other holster on your right hip, you pull out a second banana,
-        because that will be faster than reloading your first one, which has become an unrecognizable mess.
+        because that will be faster than reloading your first one.
         As two of the others step towards you in an attempt to restrain you, you hear another attempting to
         call for help.
         With a couple well-placed slaps below the jaw from your yellow deathbringer,
