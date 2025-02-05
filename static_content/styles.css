@@ -131,6 +131,19 @@ footer {
   font-size: 1.1em;
 }
 
+/* form styles */
+.formcard {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.5em;
+  background-color: #203420;
+  border-radius: 10px;
+  margin:
+  padding: 15px;
+}
+
 /* button styles */
 
 button {
