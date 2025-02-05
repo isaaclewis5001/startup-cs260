@@ -228,6 +228,26 @@ button:hover {
   border: 1px solid white;
 }
 
+
+/* laws styles */
+
+.laws {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+}
+
+.laws li {
+  background-color: #203420;
+  border-radius: 10px;
+  margin: 15px;
+  padding: 2em;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+
 /* misc */
 
 h1 {
