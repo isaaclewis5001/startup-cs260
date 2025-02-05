@@ -1,4 +1,4 @@
-/* root styles */
+/* document styles */
 
 :root {
   font-family: Tahoma, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -70,6 +70,7 @@ nav {
   height: 1.6em;  
   font-size: 1.2em;
   gap: 1.5em;
+  padding: 0 5em;
 }
 
 nav ul {
@@ -79,9 +80,9 @@ nav ul {
   display: flex;
   flex-direction: row;
   list-style-type: none;
-  padding: 0 5em;
   max-width: 1000px;
 }
+
 
 nav li {
   /* background-color: #dddddd; */
@@ -91,8 +92,7 @@ nav li {
 nav a {
   font-weight: bold;
   color: #ffffff;
-  transition: color 0.2s;
-  transition: padding 0.3s;
+  transition: padding 0.3s, color 0.2s;
   padding: 0 0.75em;
   border-right: 1px solid white;
 }
@@ -105,62 +105,49 @@ nav a:hover {
   padding: 0 1.5em;
 }
 
-/* button styles */
 
-.light-button {
-  background-color: #dddddd;
-  color: #000000;
-  padding: 0.7em;
-  border-radius: 5px;
-}
-
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
+/* main styles */
 
 main {
-  align-self: center;
+  flex-grow: 1;
   max-width: 850px;
-  padding: 10px 50px;
   background-color: #222822;
+  padding: 10px 50px;
+  margin: 0 auto;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+main .main-content {
 }
 
-a:hover {
-  color: #535bf2;
+/* footer styles */
+
+footer {
+  background-color: #183818;
+  padding: 2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1em;
+  font-size: 1.1em;
 }
 
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+/* button styles */
 
 button {
-  border-radius: 6px;
-  border: 1px solid transparent;
+  background-color: #eeeeee;
+  color: #000000;
+  padding: 0.5em;
+  border-radius: 5px;
+  font-weight: bold;
+  border: 2px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #66dd66;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  border-color: #24aa24;
 }
 
 
@@ -172,5 +159,21 @@ button:focus-visible {
   align-self: center;
   height: 52px;
   width: 48px;
+}
+/* misc */
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
 }
 
