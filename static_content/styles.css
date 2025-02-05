@@ -31,8 +31,8 @@ header {
 
 header .header-bounds {
   display: flex;
-  flex-wrap: nowrap;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 1.5em;
   padding: 0 5em;
@@ -42,6 +42,7 @@ header .header-bounds {
 
 header h1 {
   display: inline-block;
+  white-space: nowrap;
 }
 
 header .left-content {
@@ -51,6 +52,7 @@ header .left-content {
 header .right-content {
   flex-grow: 0;
   font-size: 1.2em;
+  padding: 1em;
 }
 
 header .left-content, header .right-content {
@@ -172,6 +174,7 @@ input {
 .horiz-card-set {
   flex-grow: 1;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: stretch;
   justify-content: center;
@@ -234,6 +237,7 @@ button:hover {
 .laws {
   list-style-type: none;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-content: stretch;
 }
@@ -245,6 +249,7 @@ button:hover {
   padding: 2em;
   font-size: 1.1em;
   font-weight: bold;
+  min-width:10em;
 }
 
 
