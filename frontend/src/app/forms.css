@@ -21,7 +21,7 @@
   gap: 0.3em;
 }
 
-input[type=text] {
+input[type=text], input[type="password"], input[type="email"] {
   padding: 0.6em;
   border-radius: 8px;
   border: 1px solid black;
@@ -30,7 +30,7 @@ input[type=text] {
   appearance: none;
   transition: border-radius 0.5s;
 }
-input[type=text]:focus {
+input[type=text]:focus, input[type="password"]:focus, input[type="email"]:focus {
   border-radius: 0;
 }
 

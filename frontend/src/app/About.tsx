@@ -1,5 +1,7 @@
+import { NavLink } from "react-router-dom";
+
 export function About() {
-  return (
+  return (<div className="main-content">
     <article>
       Lame images here for HTML and CSS deliverables, actual images used will be rendered with WebGL as part of the game.
 
@@ -89,10 +91,10 @@ export function About() {
         You can begin your very own crusade of primitive ideological conquest
         by creating an account today.
       </p>
-      <a href="./register.html">Sign up</a>
+      <NavLink to="/register">Sign up</NavLink>
       <p>
         Have fun!
       </p>
     </article>
-  )
+  </div>)
 }
