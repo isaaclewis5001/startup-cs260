@@ -12,6 +12,9 @@ main .main-content {
   background-color: #222822;
   padding: 10px 50px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 footer {

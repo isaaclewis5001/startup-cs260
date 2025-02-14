@@ -1,7 +1,3 @@
-
-
-
-
 export default class AuthState {
   username: string;
   token: string;

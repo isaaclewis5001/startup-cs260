@@ -1,0 +1,40 @@
+.formcard {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.25em;
+  background-color: #203420;
+  border-radius: 10px;
+  margin: 15px;
+  padding: 2em;
+  font-size: 1.1em;
+  min-width: 150px;
+  max-width: 250px;
+  flex-grow: 1;
+}
+
+.formitem {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.3em;
+}
+
+input[type=text] {
+  padding: 0.6em;
+  border-radius: 8px;
+  border: 1px solid black;
+  font-family: inherit;
+  font-size: inherit;
+  appearance: none;
+  transition: border-radius 0.5s;
+}
+input[type=text]:focus {
+  border-radius: 0;
+}
+
+label {
+  font-weight: 600;
+}
+

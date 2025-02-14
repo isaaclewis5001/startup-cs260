@@ -1,26 +1,31 @@
 header {
+  background-color: #244424;
+}
+
+header .header-bounds {
   display: flex;
-  flex-wrap: nowrap;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 1.5em;
-  padding: 0 2em;
-  background-color: #244424;
+  padding: 0 5em;
+  max-width: 1000px;
+  margin: auto;
 }
 
 header h1 {
   display: inline-block;
+  white-space: nowrap;
 }
 
 header .left-content {
   flex-grow: 1;
-  flex-grow: 1;
-  max-width: 800px;
 }
 
 header .right-content {
   flex-grow: 0;
   font-size: 1.2em;
+  padding: 1em;
 }
 
 header .left-content, header .right-content {
@@ -31,13 +36,6 @@ header .left-content, header .right-content {
 
 header .header-login, header .header-username {
   font-weight: 600;
-}
-
-header .header-login {
-  background-color: #dddddd;
-  color: #000000;
-  padding: 0.7em;
-  border-radius: 5px;
 }
 
 .page-logo {
