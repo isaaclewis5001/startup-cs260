@@ -9,6 +9,7 @@ import { About } from './About';
 import { Home } from './Home';
 import { Login } from './Login';
 import { Register } from './Register';
+import { Laws } from './Laws';
 
 export default function App() {
   const [authState, _] = useState(new AuthState("bobberton1000", ""));
@@ -29,6 +30,8 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/laws" element={<Laws />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </main>
       <footer>
@@ -37,4 +40,12 @@ export default function App() {
       </footer>
     </BrowserRouter>
   )
+}
+
+function NotFound() {
+  return (<div className="main-content">
+    <p className="center">
+      <b>404:</b> The page you are looking for does not exist.
+    </p>
+  </div>)
 }
