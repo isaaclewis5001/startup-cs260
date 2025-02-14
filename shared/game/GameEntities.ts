@@ -20,6 +20,7 @@ export default class GameEntities {
   }
 }
 
+
 class EntityIDMap {
   // contains an embedded linked list of all the unused IDs.
   // each unused id maps to (-2 - id_unused_next), to distinguish
