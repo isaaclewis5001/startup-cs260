@@ -1,7 +1,6 @@
-import { useState } from 'react'
 import './App.css'
 import Header from './Header';
-import AuthState from '../AuthState';
+
 // import GameWindow from './GameWindow';
 // import JungleGame from '../game/JungleGame';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
@@ -10,13 +9,14 @@ import { Home } from './Home';
 import { Login } from './Login';
 import { Register } from './Register';
 import { Laws } from './Laws';
+import AuthEffects from './state/AuthEffects';
 
 export default function App() {
-  const [authState, _] = useState(new AuthState("bobberton1000", ""));
+  const authEffects = new AuthEffects();
   
   return (
     <BrowserRouter>
-      <Header authState={authState} />
+      <Header authEffects={authEffects} />
       <nav>
         <ul>
           <li><NavLink to="/">Home</NavLink></li>
@@ -28,7 +28,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login authEffects={authEffects} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/laws" element={<Laws />} />
           <Route path='*' element={<NotFound />} />

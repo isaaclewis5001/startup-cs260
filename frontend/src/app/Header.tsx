@@ -1,28 +1,35 @@
-import AuthState from "../AuthState";
+import { NavLink } from "react-router-dom";
 import "./Header.css"
+import AuthEffects from "./state/AuthEffects";
 import monkey_logo from "/monkey_still_life.png"
 
+function AccountManagement({authEffects}: {authEffects: AuthEffects}) {
 
-function AccountManagement({authState}: {authState: AuthState | null}) {
-  if (authState === null) {
+  
+  if (authEffects.state === null) {
+    
     return (
-      <button className="header-login">Login</button>
+      <NavLink className="header-login button" to="/login">Login</NavLink>
     );
   }
   else {
+    function logout() {
+      authEffects.removeAuth();
+    }
+
     return (
       <>
         <p>
           Logged in as<br/>
-          <span className="header-username">{authState.username}</span>
+          <span className="header-username">{authEffects.state.username}</span>
         </p>
-        <button className="header-login">Logout</button>
+        <button className="header-login" onClick={logout}>Logout</button>
       </>
     )
   }
 }
 
-export default function Header({authState}: {authState: AuthState | null}) {
+export default function Header({authEffects}: {authEffects: AuthEffects}) {
   return (
     <header>
       <div className="header-bounds">
@@ -31,7 +38,7 @@ export default function Header({authState}: {authState: AuthState | null}) {
             <h1>The Law of the Jungle</h1>
         </div>
         <div className="right-content">
-          <AccountManagement authState={authState} />
+          <AccountManagement authEffects={authEffects} />
         </div>
       </div>
     </header>
