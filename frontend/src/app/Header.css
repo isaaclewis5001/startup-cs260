@@ -7,7 +7,7 @@ header .header-bounds {
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.5em;
+  gap: 0em 1.5em;
   padding: 0 5em;
   max-width: 1000px;
   margin: auto;
@@ -25,7 +25,7 @@ header .left-content {
 header .right-content {
   flex-grow: 0;
   font-size: 1.2em;
-  padding: 1em;
+  padding: 0.5em 1em;
 }
 
 header .left-content, header .right-content {
@@ -42,4 +42,8 @@ header .header-login, header .header-username {
   align-self: center;
   height: 52px;
   width: 48px;
+}
+
+header p {
+  margin: 0;
 }

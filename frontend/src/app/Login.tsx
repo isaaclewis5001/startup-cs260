@@ -1,45 +1,50 @@
-import { useState } from "react";
-import { NavLink, NavigateFunction, useNavigate } from "react-router-dom";
-import LoginResponseProcessor from "../behavior/LoginResponseProcessor";
+import { ReactNode } from "react";
+import { NavLink } from "react-router-dom";
+import LoginPageParams from "../behavior/LoginPageParams";
+import { LoginForm, LoginWrapper } from "./LoginWrapper";
 
-function loginFn(username: string, password: string, navigator: NavigateFunction, responseProcessor: LoginResponseProcessor) {
-  if (username === "") {
-    // username required
-    return
+class LoginFormImpl implements LoginForm {
+  create({children}: { children: ReactNode; }): ReactNode {
+    return (<>
+      <div className="formitem">
+        <label htmlFor="inputUsername">Username</label>
+        <input type="text" placeholder="username" id="inputUsername"></input>
+      </div>
+      <div className="formitem">
+        <label htmlFor="inputPassword">Password</label>
+        <input type="password" placeholder="password" id="inputPassword"></input>
+      </div>
+
+      {children}
+      
+      <div className="formitem">
+        <span>Don't have an account yet?</span><br />
+        <NavLink to="/register">Sign up</NavLink>
+      </div>
+    </>);
   }
 
-  if (password === "") {
-    // password required
-    return
-  }
+  getPayloadOrError(): { payload: string; } | { errMsg: string; } {
+    const username = (document.getElementById("inputUsername") as HTMLInputElement | null)?.value?.trim();
+    if (!username) {
+      return {errMsg: "Username required"}
+    }
 
-  responseProcessor.processResponse(navigator, username);
+    const password = (document.getElementById("inputPassword") as HTMLInputElement | null)?.value;
+    if (!password) {
+      return {errMsg: "Password required"}
+    }
+
+    return {payload: JSON.stringify({username, password})};
+  }
+  
+  url = "";
+  submitButtonText = "Login";
+  
 }
 
-export function Login({responseProcessor}: {responseProcessor: LoginResponseProcessor}) {
-  const [username, usernameUpdate] = useState("");
-  const [password, passwordUpdate] = useState("");
-  const navigator = useNavigate();
-  
+export function Login({loginParams}: {loginParams: LoginPageParams}) {
   return (
-    <div className="main-content focus-card">
-      <div className="formcard">
-        <div className="formitem">
-          <label htmlFor="inputUsername">Username</label>
-          <input type="text" placeholder="username" id="inputUsername" value={username} onChange={evt => usernameUpdate(evt.target.value)}></input>
-        </div>
-        <div className="formitem">
-          <label htmlFor="inputPassword">Password</label>
-          <input type="password" placeholder="password" id="inputPassword" value={password} onChange={evt => passwordUpdate(evt.target.value)}></input>
-        </div>
-
-        <button onClick={() => loginFn(username, password, navigator, responseProcessor)}>Login</button>
-  
-        <div className="formitem">
-          <span>Don't have an account yet?</span><br />
-          <NavLink to="/register">Sign up</NavLink>
-        </div>
-      </div>
-    </div>
+    <LoginWrapper loginParams={loginParams} form={new LoginFormImpl()} />
   )
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import Game from "../game-interface/Game"
 import GameResources from "../game-interface/GameResources";
 
-export default function GameWindow({game}: {game: Game} ) {
+export default function GameWindow({game}: {game: Game | null} ) {
   // We need imperative access to our canvases
   const primaryCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const secondaryCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -10,7 +10,7 @@ export default function GameWindow({game}: {game: Game} ) {
   useEffect(
     () => {
       // This code gets called whenever the component is loaded or the game changes
-      if (primaryCanvasRef.current === null) {
+      if (!game || !primaryCanvasRef.current) {
         return;
       }
       const resources = new GameResources(primaryCanvasRef.current, secondaryCanvasRef.current);

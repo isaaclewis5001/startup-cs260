@@ -1,57 +1,58 @@
-import { useState } from "react";
-import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
-import LoginResponseProcessor from "../behavior/LoginResponseProcessor";
+import { ReactNode } from "react";
+import { NavLink } from "react-router-dom";
+import LoginPageParams from "../behavior/LoginPageParams";
+import { LoginForm, LoginWrapper } from "./LoginWrapper";
 
-function registerFn(username: string, email: string, password: string, navigator: NavigateFunction,responseProcessor: LoginResponseProcessor) {
-  if (username === "") {
-    // username required
-    return
+
+class RegisterFormImpl implements LoginForm {
+  create({children}: { children: ReactNode; }): ReactNode {
+    return (<>
+      <div className="formitem">
+        <label htmlFor="inputUsername">Username</label>
+        <input type="text" placeholder="username" id="inputUsername"></input>
+      </div>
+        <div className="formitem">
+          <label htmlFor="inputEmail">Email</label>
+          <input type="email" placeholder="email" id="inputEmail"></input>
+        </div>
+      <div className="formitem">
+        <label htmlFor="inputPassword">Password</label>
+        <input type="password" placeholder="password" id="inputPassword"></input>
+      </div>
+
+      {children}
+    
+      <div className="formitem">
+        <span>Already have an account?</span><br />
+        <NavLink to="/login">Login</NavLink>
+      </div>
+    </>)
   }
+  getPayloadOrError(): { payload: string; } | { errMsg: string; } {
+    const username = (document.getElementById("inputUsername") as HTMLInputElement | null)?.value?.trim();
+    if (!username) {
+      return {errMsg: "Username required"}
+    }
 
-  if (email === "") {
-    // password required
-    return
+    const email = (document.getElementById("inputEmail") as HTMLInputElement | null)?.value?.trim();
+    if (!email) {
+      return {errMsg: "Password required"}
+    }
+
+    const password = (document.getElementById("inputPassword") as HTMLInputElement | null)?.value;
+    if (!password) {
+      return {errMsg: "Password required"}
+    }
+
+    return {payload: JSON.stringify({username, password})};
   }
-
-  if (password === "") {
-    // password required
-    return
-  }
-
-
-  responseProcessor.processResponse(navigator, username);
+  url = "";
+  submitButtonText = "Sign up";
 }
 
-
-export function Register({responseProcessor}: {responseProcessor: LoginResponseProcessor}) {
-  const [username, usernameUpdate] = useState("");
-  const [email, emailUpdate] = useState("");
-  const [password, passwordUpdate] = useState("");
-  const navigator = useNavigate();
+export function Register({loginParams}: {loginParams: LoginPageParams}) {
   
   return (
-    <div className="main-content focus-card">
-      <div className="formcard">
-        <div className="formitem">
-          <label htmlFor="inputUsername">Username</label>
-          <input type="text" placeholder="username" id="inputUsername" value={username} onChange={evt => usernameUpdate(evt.target.value)}></input>
-        </div>
-          <div className="formitem">
-            <label htmlFor="inputEmail">Email</label>
-            <input type="email" placeholder="email" id="inputEmail" value={email} onChange={evt => emailUpdate(evt.target.value)}></input>
-          </div>
-        <div className="formitem">
-          <label htmlFor="inputPassword">Password</label>
-          <input type="password" placeholder="password" id="inputPassword" value={password} onChange={evt => passwordUpdate(evt.target.value)}></input>
-        </div>
-
-        <button onClick={() => registerFn(username, email, password, navigator, responseProcessor)}>Login</button>
-  
-        <div className="formitem">
-          <span>Don't have an account yet?</span><br />
-          <NavLink to="/register">Sign up</NavLink>
-        </div>
-      </div>
-    </div>
+    <LoginWrapper form={new RegisterFormImpl} loginParams={loginParams}/>
   );
 }
