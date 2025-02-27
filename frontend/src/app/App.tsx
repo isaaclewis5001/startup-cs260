@@ -9,10 +9,12 @@ import { Home } from './Home';
 import { Login } from './Login';
 import { Register } from './Register';
 import { Laws } from './Laws';
-import AuthEffects from './state/AuthEffects';
+import AuthEffects from '../behavior/AuthEffects';
+import LoginResponseProcessor from '../behavior/LoginResponseProcessor';
 
 export default function App() {
   const authEffects = new AuthEffects();
+  const loginResponseProcessor = new LoginResponseProcessor(authEffects);
   
   return (
     <BrowserRouter>
@@ -28,8 +30,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login authEffects={authEffects} />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login responseProcessor={loginResponseProcessor}/>} />
+          <Route path="/register" element={<Register responseProcessor={loginResponseProcessor}/>} />
           <Route path="/laws" element={<Laws />} />
           <Route path='*' element={<NotFound />} />
         </Routes>

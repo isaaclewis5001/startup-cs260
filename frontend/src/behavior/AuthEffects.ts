@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AuthState from "../../../../model/AuthState";
+import AuthState from "../../../model/AuthState";
 
 export default class AuthEffects {
   state;

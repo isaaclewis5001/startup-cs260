@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
-import AuthEffects from "./state/AuthEffects";
-import AuthState from "../../../model/AuthState";
+import { NavLink, NavigateFunction, useNavigate } from "react-router-dom";
+import LoginResponseProcessor from "../behavior/LoginResponseProcessor";
 
-function loginFn(username: string, password: string, authEffects: AuthEffects, navigator: NavigateFunction) {
+function loginFn(username: string, password: string, navigator: NavigateFunction, responseProcessor: LoginResponseProcessor) {
   if (username === "") {
     // username required
     return
@@ -14,15 +13,12 @@ function loginFn(username: string, password: string, authEffects: AuthEffects, n
     return
   }
 
-  // TODO: this is a mock
-  authEffects.setAuth(new AuthState(username, "this is a mock token"));
-  navigator("/")
+  responseProcessor.processResponse(navigator, username);
 }
 
-export function Login({authEffects}: {authEffects: AuthEffects}) {
+export function Login({responseProcessor}: {responseProcessor: LoginResponseProcessor}) {
   const [username, usernameUpdate] = useState("");
   const [password, passwordUpdate] = useState("");
-
   const navigator = useNavigate();
   
   return (
@@ -37,7 +33,7 @@ export function Login({authEffects}: {authEffects: AuthEffects}) {
           <input type="password" placeholder="password" id="inputPassword" value={password} onChange={evt => passwordUpdate(evt.target.value)}></input>
         </div>
 
-        <button onClick={() => loginFn(username, password, authEffects, navigator)}>Login</button>
+        <button onClick={() => loginFn(username, password, navigator, responseProcessor)}>Login</button>
   
         <div className="formitem">
           <span>Don't have an account yet?</span><br />
