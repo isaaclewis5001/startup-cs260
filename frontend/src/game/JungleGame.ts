@@ -1,7 +1,7 @@
-import { KeyboardController, TouchController } from "../game-utils/controllers";
-import Game from "../game-utils/Game";
-import GameResources from "../game-utils/GameResources";
-import GameState from "../game-utils/GameState";
+import { KeyboardController, TouchController } from "../game-interface/controllers";
+import Game from "../game-interface/Game";
+import GameResources from "../game-interface/GameResources";
+import GameState from "../game-interface/GameState";
 
 export default class JungleGame implements Game {
   start(resources: GameResources): JungleGameState | null {    

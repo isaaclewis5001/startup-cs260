@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
-import Game from "../game-utils/Game"
-import GameResources from "../game-utils/GameResources";
+import Game from "../game-interface/Game"
+import GameResources from "../game-interface/GameResources";
 
 export default function GameWindow({game}: {game: Game} ) {
   // We need imperative access to our canvases

@@ -1,6 +1,33 @@
+import { useEffect, useState } from "react"
 import "./Laws.css"
+import GameOutcome from "../../../model/GameOutcome"
+
+
+function getLaws(): GameOutcome[] {
+  return [
+    new GameOutcome("Does pineapple go on pizza?", "No!", "Florence, Italy"),
+    new GameOutcome("Summer or winter?", "Winter", "Salt Lake City, Utah"),
+    new GameOutcome("Football or basketball?", "Football", "La Paz, Bolivia"),
+  ]
+}
+
+function Law({outcome}: {outcome: GameOutcome}) {
+  return (
+    <li>
+      <div className="law">
+        <p>{outcome.question}</p>
+        <p>{outcome.answer}</p>
+        <p>{outcome.settledIn}</p>
+      </div>
+    </li>
+  )
+}
 
 export function Laws() {
+  const [laws, updateLaws] = useState<GameOutcome[]>([]);
+  useEffect(() => {
+    updateLaws(getLaws())
+  }, [updateLaws])
   return (
     <div className="main-content">
       <div>
@@ -9,27 +36,9 @@ export function Laws() {
         For the sake of user privacy, this IP to location conversion is done before storing
         the game outcome in the database, rather than for each individual client who views this page.
         <ul className="laws">
-          <li>
-            <div className="law">
-              <p>Does pineapple go on pizza?</p>
-              <p>No!</p>
-              <p>Florence, Italy</p>
-            </div>
-          </li>
-          <li>
-            <div className="law">
-              <p>Summer or winter?</p>
-              <p>Winter</p>
-              <p>Salt Lake City, Utah</p>
-            </div>
-          </li>
-          <li>
-            <div className="law">
-              <p>Football or basketball?</p>
-              <p>Football</p>
-              <p>La Paz, Bolivia</p>
-            </div>
-          </li>
+          {laws.map(
+            x => (<Law outcome={x}/>)
+          )}
         </ul>
       </div>
     </div>

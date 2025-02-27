@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
 import AuthEffects from "./state/AuthEffects";
-import AuthState from "../AuthState";
+import AuthState from "../../../model/AuthState";
 
 function loginFn(username: string, password: string, authEffects: AuthEffects, navigator: NavigateFunction) {
   if (username === "") {
