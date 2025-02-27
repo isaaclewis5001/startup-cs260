@@ -1,0 +1,13 @@
+.game-canvas {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 100;
+}
+
+.main-content-full {
+  flex-grow: 1;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

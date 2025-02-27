@@ -26,22 +26,6 @@ class JungleGameState implements GameState {
     frameLoop(this);
   }
 
-  renderFrame(deltaTime: number): boolean {
-    this.bgAnimationProgress += deltaTime;
-    this.bgAnimationProgress %= 2000;
-    let color;
-    if (this.bgAnimationProgress >= 1000) {
-      color = (2000 - this.bgAnimationProgress) * 0.001;
-    }
-    else {
-      color = this.bgAnimationProgress * 0.001;
-    }
-    this.primaryContext.clearColor(color, color, 0.0, 1.0);
-    this.primaryContext.clear(this.primaryContext.COLOR_BUFFER_BIT);
-    return !this.shouldStop;
-  }
-
-  
   getKeyboardController(): KeyboardController | null {
     return new KBController();
   }
@@ -52,6 +36,35 @@ class JungleGameState implements GameState {
   
   stop(): void {
     this.shouldStop = true;
+  }
+
+  renderFrame(deltaTime: number): boolean {
+    this.bgAnimationProgress += deltaTime;
+    this.bgAnimationProgress %= 2000;
+    let color;
+    if (this.bgAnimationProgress >= 1000) {
+      color = (2000 - this.bgAnimationProgress) * 0.001;
+    }
+    else {
+      color = this.bgAnimationProgress * 0.001;
+    }
+    this.primaryContext.clearColor(0.0, color, 0.0, 1.0);
+    this.primaryContext.clear(this.primaryContext.COLOR_BUFFER_BIT);
+    return !this.shouldStop;
+  }
+
+  
+}
+
+class KBController implements KeyboardController {
+  keyStates = {};
+  
+  keyDown(event: KeyboardEvent): boolean {
+    console.log(event.code);
+    return false;
+  }
+  keyUp(_event: KeyboardEvent): boolean {
+    return false;
   }
 }
 
@@ -73,14 +86,5 @@ function frameLoop(state: JungleGameState) {
   requestAnimationFrame(frame);
 }
 
-class KBController implements KeyboardController {
-  keyDown(event: KeyboardEvent): boolean {
-    console.log(event.code);
-    return false;
-  }
-  keyUp(_event: KeyboardEvent): boolean {
-    return false;
-  }
-}
 
 

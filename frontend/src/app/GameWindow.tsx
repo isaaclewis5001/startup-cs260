@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 import Game from "../game-interface/Game"
 import GameResources from "../game-interface/GameResources";
+import "./GameWindow.css"
 
 export default function GameWindow({game}: {game: Game | null} ) {
   // We need imperative access to our canvases
@@ -50,7 +51,12 @@ export default function GameWindow({game}: {game: Game | null} ) {
         }        
 
         function onKeyUp(event: KeyboardEvent) {
-          controllerNonNull.keyUp(event)
+          if (event.defaultPrevented) {
+            return;
+          }
+          if (controllerNonNull.keyDown(event)) {
+            controllerNonNull.keyUp(event)
+          }
         }
         
         window.addEventListener('keydown', onKeyDown);
@@ -70,8 +76,8 @@ export default function GameWindow({game}: {game: Game | null} ) {
   );
   
   return (
-    <div>
-      <canvas ref={primaryCanvasRef} />
+    <div className="main-content-full">
+      <canvas ref={primaryCanvasRef} className="game-canvas game-canvas-primary"/>
     </div>
   )
 }

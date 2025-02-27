@@ -12,23 +12,35 @@ import { Register } from './Register';
 import AuthEffects from '../behavior/AuthEffects';
 import LoginPageParams from '../behavior/LoginPageParams';
 import GameWindow from './GameWindow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import JungleGame from '../game/JungleGame';
+import Game from '../game-interface/Game';
 
 export default function App() {
   const authEffects = new AuthEffects();
   const loginParams = new LoginPageParams(authEffects);
-  const [game, _] = useState(null);
+  const [game, setGame] = useState<Game | null>(null);
+  
+  useEffect(() => {
+    setGame(new JungleGame());
+  }, [setGame])
+
+  const focusMode = game !== null;
   
   return (
     <BrowserRouter>
-      <Header authEffects={authEffects} />
-      <nav>
-        <ul>
-          <li><NavLink to="/">Home</NavLink></li>
-          <li><NavLink to="/about">About</NavLink></li>
-          <li><NavLink to="/laws">Laws</NavLink></li>
-        </ul>
-      </nav>
+      <Header authEffects={authEffects} loginInfoVisible={!focusMode}/>
+      {
+        focusMode ? null : (
+          <nav>
+            <ul>
+              <li><NavLink to="/">Home</NavLink></li>
+              <li><NavLink to="/about">About</NavLink></li>
+              <li><NavLink to="/laws">Laws</NavLink></li>
+            </ul>
+          </nav>
+        )
+      }
       <main>
         <Routes>
           <Route path="/" element={<Home />} />

@@ -53,6 +53,6 @@ class RegisterFormImpl implements LoginForm {
 export function Register({loginParams}: {loginParams: LoginPageParams}) {
   
   return (
-    <LoginWrapper form={new RegisterFormImpl} loginParams={loginParams}/>
+    <LoginWrapper form={new RegisterFormImpl()} loginParams={loginParams}/>
   );
 }

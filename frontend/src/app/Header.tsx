@@ -1,6 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import "./Header.css"
-import AuthEffects from "./state/AuthEffects";
+import AuthEffects from "../behavior/AuthEffects";
 import monkey_logo from "/monkey_still_life.png"
 
 function AccountManagement({authEffects}: {authEffects: AuthEffects}) {
@@ -29,7 +29,9 @@ function AccountManagement({authEffects}: {authEffects: AuthEffects}) {
   }
 }
 
-export default function Header({authEffects}: {authEffects: AuthEffects}) {
+export default function Header({authEffects, loginInfoVisible}: {authEffects: AuthEffects, loginInfoVisible: boolean}) {
+  const location = useLocation();
+  const visible = loginInfoVisible && location.pathname !== "register" && location.pathname !== "login" 
   return (
     <header>
       <div className="header-bounds">
@@ -37,9 +39,11 @@ export default function Header({authEffects}: {authEffects: AuthEffects}) {
             <img src={monkey_logo} className="page-logo crisp-image"/>
             <h1>The Law of the Jungle</h1>
         </div>
-        <div className="right-content">
-          <AccountManagement authEffects={authEffects} />
-        </div>
+        { !visible ? null : (
+          <div className="right-content">
+            <AccountManagement authEffects={authEffects} />
+          </div>
+        )}
       </div>
     </header>
   )
