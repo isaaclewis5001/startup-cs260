@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import LoginPageParams from "../behavior/LoginPageParams";
-import { Form, FormWrapper } from "./FormWrapper";
+import { Form, FormWrapper, getFieldById, getFieldByIdNoTrim } from "./FormWrapper";
 import { LoginFormAction } from "./LoginFormAction";
 
 
@@ -30,17 +30,17 @@ class RegisterFormImpl implements Form<null> {
     </>)
   }
   getPayloadOrError(): { payload: string; context: null} | { errMsg: string; } {
-    const username = (document.getElementById("inputUsername") as HTMLInputElement | null)?.value?.trim();
+    const username = getFieldById("inputUsername");
     if (!username) {
       return {errMsg: "Username required"}
     }
 
-    const email = (document.getElementById("inputEmail") as HTMLInputElement | null)?.value?.trim();
+    const email = getFieldById("inputEmail");
     if (!email) {
-      return {errMsg: "Password required"}
+      return {errMsg: "Email required"}
     }
 
-    const password = (document.getElementById("inputPassword") as HTMLInputElement | null)?.value;
+    const password = getFieldByIdNoTrim("inputPassword");
     if (!password) {
       return {errMsg: "Password required"}
     }

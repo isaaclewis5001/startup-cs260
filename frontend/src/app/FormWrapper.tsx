@@ -14,7 +14,7 @@ export function FormWrapper<C>({form, action}: {form: Form<C>, action: FormActio
 
 
     // TODO: actually perform a fetch
-    // await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500));
     await action.act(maybePayload.context, new Response("FormWrapper.tsx mock fetch", {status: 418}), navigator);
   }
   
@@ -27,6 +27,14 @@ export function FormWrapper<C>({form, action}: {form: Form<C>, action: FormActio
   )
 }
 
+export function getFieldById(id: string): string | undefined {
+  return getFieldByIdNoTrim(id)?.trim();
+}
+
+export function getFieldByIdNoTrim(id: string): string | undefined {  
+  return (document.getElementById(id) as HTMLInputElement | null)?.value;
+}
+
 export interface Form<C> {
   create(props: {children: ReactNode}): ReactNode;
   getPayloadOrError(): {payload: any, context: C} | {errMsg: string};
@@ -37,3 +45,4 @@ export interface Form<C> {
 export interface FormAction<C> {
   act(context: C, response: Response, navigator: NavigateFunction): Promise<string | null>;
 }
+
