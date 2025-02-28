@@ -3,14 +3,11 @@ import "./Header.css"
 import AuthEffects from "../behavior/AuthEffects";
 import monkey_logo from "/monkey_still_life.png"
 
-function AccountManagement({authEffects}: {authEffects: AuthEffects}) {
-
-  
+function AccountManagement({authEffects, loginButtonVisible}: {authEffects: AuthEffects, loginButtonVisible: boolean}) {
   if (authEffects.state === null) {
-    
-    return (
-      <NavLink className="header-login button" to="/login">Login</NavLink>
-    );
+    return loginButtonVisible ? 
+      (<NavLink className="header-login button" to="/login">Login</NavLink>) :
+      null;
   }
   else {
     function logout() {
@@ -23,15 +20,19 @@ function AccountManagement({authEffects}: {authEffects: AuthEffects}) {
           Logged in as<br/>
           <span className="header-username">{authEffects.state.username}</span>
         </p>
-        <button className="header-login" onClick={logout}>Logout</button>
+        {
+          loginButtonVisible ? 
+          (<button className="header-login" onClick={logout}>Logout</button>) :
+          null
+        }
       </>
     )
   }
 }
 
-export default function Header({authEffects, loginInfoVisible}: {authEffects: AuthEffects, loginInfoVisible: boolean}) {
+export default function Header({authEffects, loginButtonVisible}: {authEffects: AuthEffects, loginButtonVisible: boolean}) {
   const location = useLocation();
-  const visible = loginInfoVisible && location.pathname !== "register" && location.pathname !== "login" 
+  const rightSideVisible = location.pathname !== "register" && location.pathname !== "login" 
   return (
     <header>
       <div className="header-bounds">
@@ -39,9 +40,9 @@ export default function Header({authEffects, loginInfoVisible}: {authEffects: Au
             <img src={monkey_logo} className="page-logo crisp-image"/>
             <h1>The Law of the Jungle</h1>
         </div>
-        { !visible ? null : (
+        { !rightSideVisible ? null : (
           <div className="right-content">
-            <AccountManagement authEffects={authEffects} />
+            <AccountManagement authEffects={authEffects} loginButtonVisible={loginButtonVisible}/>
           </div>
         )}
       </div>

@@ -1,54 +1,72 @@
 import './App.css'
 import Header from './Header';
 
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { About } from './About';
 import { Home } from './Home';
 import { Laws } from './Laws';
 import { Register } from './Register';
+import { Login } from './Login';
+import GameWindow from './GameWindow';
 import AuthEffects from '../behavior/AuthEffects';
 import LoginPageParams from '../behavior/LoginPageParams';
-import GameWindow from './GameWindow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Game from '../game-interface/Game';
-import { Login } from './Login';
 
-export default function App() {
+function AppContent() {
   const authEffects = new AuthEffects();
   const loginParams = new LoginPageParams(authEffects);
-  const [game, _] = useState<Game | null>(null);
+  const [game, setGame] = useState<Game | null>(null);
   
-  const focusMode = game !== null;
+  const location = useLocation();
+  const navigator = useNavigate();
+
+  const focusMode = location.pathname === "/play";
   
-  return (
+  useEffect(() => {
+    if (location.pathname === "/play" && !game) {
+      // navigator("/home")
+    }
+    if (location.pathname === "/" && !authEffects.state) {
+      navigator("/login");
+    }
+  }, [location, game, authEffects, navigator]);
+
+  return (<>
+    <Header authEffects={authEffects} loginButtonVisible={!focusMode}/>
+    {
+      focusMode ? null : (
+        <nav>
+          <ul>
+            <li><NavLink to="/">Home</NavLink></li>
+            <li><NavLink to="/about">About</NavLink></li>
+            <li><NavLink to="/laws">Laws</NavLink></li>
+          </ul>
+        </nav>
+      )
+    }
+    <main>
+      <Routes>
+        <Route path="/" element={<Home setGameFn={setGame}/>} />
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login loginParams={loginParams}/>} />
+        <Route path="/register" element={<Register loginParams={loginParams}/>} />
+        <Route path="/laws" element={<Laws />} />
+        <Route path="/play" element={<GameWindow game={game}/>} />
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </main>
+    <footer>
+      <span>&copy; 2025 Isaac Lewis.</span>
+      <span><a href="https://github.com/isaaclewis5001/startup-cs260">GitHub</a></span>
+    </footer>
+  </>);
+}
+
+export default function App() {
+    return (
     <BrowserRouter>
-      <Header authEffects={authEffects} loginInfoVisible={!focusMode}/>
-      {
-        focusMode ? null : (
-          <nav>
-            <ul>
-              <li><NavLink to="/">Home</NavLink></li>
-              <li><NavLink to="/about">About</NavLink></li>
-              <li><NavLink to="/laws">Laws</NavLink></li>
-            </ul>
-          </nav>
-        )
-      }
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login loginParams={loginParams}/>} />
-          <Route path="/register" element={<Register loginParams={loginParams}/>} />
-          <Route path="/laws" element={<Laws />} />
-          <Route path="/play" element={<GameWindow game={game}/>} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-      </main>
-      <footer>
-        <span>&copy; 2025 Isaac Lewis.</span>
-        <span><a href="https://github.com/isaaclewis5001/startup-cs260">GitHub</a></span>
-      </footer>
+      <AppContent />
     </BrowserRouter>
   )
 }

@@ -3,6 +3,8 @@ import "./cards.css"
 import "./forms.css"
 import { Form, FormAction, FormWrapper, getFieldById } from "./FormWrapper"
 import { NavigateFunction } from "react-router-dom";
+import Game from "../game-interface/Game";
+import JungleGame from "../game/JungleGame";
 
 class JoinByIDForm implements Form<null> {
   create({ children }: { children: ReactNode }): ReactNode {
@@ -70,15 +72,24 @@ class CreateGameForm implements Form<null> {
   submitButtonText = "Create Game";
 }
 
+type SetGameFn = (game: Game) => void;
+
 class JoinGameAction implements FormAction<null> {
+  private setGame: SetGameFn;
+
+  constructor(setGameFn: SetGameFn) {
+    this.setGame = setGameFn;
+  }
+  
   async act(_context: null, _response: Response, navigator: NavigateFunction): Promise<string | null> {
     navigator("/play");
+    this.setGame(new JungleGame());
     return null;
   }
 }
 
-export function Home() {
-  const action = new JoinGameAction();
+export function Home({setGameFn}: {setGameFn: SetGameFn}) {
+  const action = new JoinGameAction(setGameFn);
   return (
     <div className="main-content">
       <div className="horiz-card-set">

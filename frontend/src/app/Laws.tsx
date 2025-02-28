@@ -5,9 +5,9 @@ import GameOutcome from "../../../model/GameOutcome"
 
 function getLaws(): GameOutcome[] {
   return [
-    new GameOutcome("Does pineapple go on pizza?", "No!", "Florence, Italy"),
-    new GameOutcome("Summer or winter?", "Winter", "Salt Lake City, Utah"),
-    new GameOutcome("Football or basketball?", "Football", "La Paz, Bolivia"),
+    new GameOutcome(0, "Does pineapple go on pizza?", "No!", "Florence, Italy"),
+    new GameOutcome(1, "Summer or winter?", "Winter", "Salt Lake City, Utah"),
+    new GameOutcome(2, "Football or basketball?", "Football", "La Paz, Bolivia"),
   ]
 }
 
@@ -37,7 +37,7 @@ export function Laws() {
         the game outcome in the database, rather than for each individual client who views this page.
         <ul className="laws">
           {laws.map(
-            x => (<Law outcome={x}/>)
+            x => (<Law outcome={x} key={x.id}/>)
           )}
         </ul>
       </div>
