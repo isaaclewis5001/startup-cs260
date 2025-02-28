@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
+import { Form, FormWrapper } from "./FormWrapper";
 import LoginPageParams from "../behavior/LoginPageParams";
-import { LoginForm, LoginWrapper } from "./LoginWrapper";
+import { LoginFormAction } from "./LoginFormAction";
 
-class LoginFormImpl implements LoginForm {
+class LoginFormImpl implements Form<null> {
   create({children}: { children: ReactNode; }): ReactNode {
     return (<>
       <div className="formitem">
@@ -24,7 +25,7 @@ class LoginFormImpl implements LoginForm {
     </>);
   }
 
-  getPayloadOrError(): { payload: string; } | { errMsg: string; } {
+  getPayloadOrError(): { payload: string; context: null } | { errMsg: string; } {
     const username = (document.getElementById("inputUsername") as HTMLInputElement | null)?.value?.trim();
     if (!username) {
       return {errMsg: "Username required"}
@@ -35,16 +36,17 @@ class LoginFormImpl implements LoginForm {
       return {errMsg: "Password required"}
     }
 
-    return {payload: JSON.stringify({username, password})};
+    return {payload: JSON.stringify({username, password}), context: null};
   }
   
   url = "";
   submitButtonText = "Login";
-  
 }
 
 export function Login({loginParams}: {loginParams: LoginPageParams}) {
   return (
-    <LoginWrapper loginParams={loginParams} form={new LoginFormImpl()} />
+    <div className="main-content focus-card">
+      <FormWrapper form={new LoginFormImpl()} action={new LoginFormAction(loginParams)}/>
+    </div>
   )
 }

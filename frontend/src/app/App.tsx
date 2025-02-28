@@ -1,30 +1,23 @@
 import './App.css'
 import Header from './Header';
 
-// import GameWindow from './GameWindow';
-// import JungleGame from '../game/JungleGame';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import { About } from './About';
 import { Home } from './Home';
-import { Login } from './Login';
 import { Laws } from './Laws';
 import { Register } from './Register';
 import AuthEffects from '../behavior/AuthEffects';
 import LoginPageParams from '../behavior/LoginPageParams';
 import GameWindow from './GameWindow';
-import { useEffect, useState } from 'react';
-import JungleGame from '../game/JungleGame';
+import { useState } from 'react';
 import Game from '../game-interface/Game';
+import { Login } from './Login';
 
 export default function App() {
   const authEffects = new AuthEffects();
   const loginParams = new LoginPageParams(authEffects);
-  const [game, setGame] = useState<Game | null>(null);
+  const [game, _] = useState<Game | null>(null);
   
-  useEffect(() => {
-    setGame(new JungleGame());
-  }, [setGame])
-
   const focusMode = game !== null;
   
   return (

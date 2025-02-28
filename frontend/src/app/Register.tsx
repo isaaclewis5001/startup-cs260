@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import LoginPageParams from "../behavior/LoginPageParams";
-import { LoginForm, LoginWrapper } from "./LoginWrapper";
+import { Form, FormWrapper } from "./FormWrapper";
+import { LoginFormAction } from "./LoginFormAction";
 
 
-class RegisterFormImpl implements LoginForm {
+class RegisterFormImpl implements Form<null> {
   create({children}: { children: ReactNode; }): ReactNode {
     return (<>
       <div className="formitem">
@@ -28,7 +29,7 @@ class RegisterFormImpl implements LoginForm {
       </div>
     </>)
   }
-  getPayloadOrError(): { payload: string; } | { errMsg: string; } {
+  getPayloadOrError(): { payload: string; context: null} | { errMsg: string; } {
     const username = (document.getElementById("inputUsername") as HTMLInputElement | null)?.value?.trim();
     if (!username) {
       return {errMsg: "Username required"}
@@ -44,7 +45,7 @@ class RegisterFormImpl implements LoginForm {
       return {errMsg: "Password required"}
     }
 
-    return {payload: JSON.stringify({username, password})};
+    return {payload: JSON.stringify({username, password}), context: null};
   }
   url = "";
   submitButtonText = "Sign up";
@@ -53,6 +54,8 @@ class RegisterFormImpl implements LoginForm {
 export function Register({loginParams}: {loginParams: LoginPageParams}) {
   
   return (
-    <LoginWrapper form={new RegisterFormImpl()} loginParams={loginParams}/>
+    <div className="main-content focus-card">
+      <FormWrapper form={new RegisterFormImpl()} action={new LoginFormAction(loginParams)}/>
+    </div>
   );
 }
