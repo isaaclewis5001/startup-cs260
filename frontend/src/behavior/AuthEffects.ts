@@ -1,31 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AuthState from "../../../model/AuthState";
 
 export default class AuthEffects {
   state;
-  __update;
-  constructor() {
-    [this.state, this.__update] = useState<null | AuthState>(null);
+  updateFn;
+  constructor(state: AuthState | null, updateFn: (s: AuthState | null) => void) {
+    this.state = state;
+    this.updateFn = updateFn;
     useEffect(() => {
       const user = localStorage.getItem("auth-user");
       const token = localStorage.getItem("auth-token");
       if (user && token) {
-        this.__update(new AuthState(user, token));
+        this.updateFn(new AuthState(user, token));
       }
 
-    }, [this.__update])
+    }, [this.updateFn])
   }
 
   setAuth(state: AuthState) {
     localStorage.setItem("auth-user", state.username)
     localStorage.setItem("auth-token", state.username)
-    this.__update(state)
+    this.updateFn(state)
   }
 
   removeAuth() {
     localStorage.removeItem("auth-user")
     localStorage.removeItem("auth-token")
-    this.__update(null);
+    this.updateFn(null);
   }
 }
 

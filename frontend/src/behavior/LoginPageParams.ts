@@ -1,4 +1,4 @@
-import AuthEffects from "./AuthEffects";
+import AuthEffects from "./AuthEffects.1";
 
 export default class LoginPageParams {
   authEffects: AuthEffects;

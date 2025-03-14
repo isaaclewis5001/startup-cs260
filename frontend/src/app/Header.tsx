@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import "./Header.css"
-import AuthEffects from "../behavior/AuthEffects";
+import AuthEffects from "../behavior/AuthEffects.1";
 import monkey_logo from "/monkey_still_life.png"
 
 function AccountManagement({authEffects, loginButtonVisible}: {authEffects: AuthEffects, loginButtonVisible: boolean}) {

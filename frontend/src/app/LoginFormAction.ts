@@ -2,7 +2,7 @@
 import AuthState from "../../../model/AuthState";
 import { NavigateFunction } from "react-router-dom";
 import { FormAction } from "./FormWrapper";
-import AuthEffects from "../behavior/AuthEffects";
+import AuthEffects from "../behavior/AuthEffects.1";
 import LoginPageParams from "../behavior/LoginPageParams";
 
 

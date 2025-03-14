@@ -8,29 +8,32 @@ import { Laws } from './Laws';
 import { Register } from './Register';
 import { Login } from './Login';
 import GameWindow from './GameWindow';
-import AuthEffects from '../behavior/AuthEffects';
+import AuthEffects from "../behavior/AuthEffects";
 import LoginPageParams from '../behavior/LoginPageParams';
 import { useEffect, useState } from 'react';
 import Game from '../game-interface/Game';
+import AuthState from '../../../model/AuthState';
 
 function AppContent() {
-  const authEffects = new AuthEffects();
-  const loginParams = new LoginPageParams(authEffects);
+
+  const [authState, authUpdate] = useState<null | AuthState>(null);
   const [game, setGame] = useState<Game | null>(null);
   
   const location = useLocation();
   const navigator = useNavigate();
-
-  const focusMode = location.pathname === "/play";
-  
   useEffect(() => {
     if (location.pathname === "/play" && !game) {
-      // navigator("/home")
+      navigator("/")
     }
     if (location.pathname === "/" && !authEffects.state) {
       navigator("/login");
     }
-  }, [location, game, authEffects, navigator]);
+  }, [location, navigator, game, authState]);
+
+  const authEffects = new AuthEffects(authState, authUpdate);
+  const loginParams = new LoginPageParams(authEffects);
+
+  const focusMode = location.pathname === "/play";
 
   return (<>
     <Header authEffects={authEffects} loginButtonVisible={!focusMode}/>
