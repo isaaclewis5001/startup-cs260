@@ -1,6 +1,6 @@
 import express, { NextFunction, Response } from 'express';
 import { BadLoginErr, DBConfig, MongoDBClient, UsernameDupErr } from './db';
-import { CreateAccountRequest as CreateUserRequest, LoginRequest, SessionResponse } from '../../shared/api/model';
+import { CreateUserRequest, LoginRequest, SessionResponse } from '../../shared/api/model';
 import { ObjectId } from 'mongodb';
 
 
@@ -10,42 +10,37 @@ export default function server(port: number, dbConfig: DBConfig) {
   const serv = express();
   const db = new MongoDBClient(dbConfig);
  
-  async function authenticateRequest(req: Request, res: Response, next: NextFunction) {
-    const auth = getAuthFromRequest(req);
-    if (auth !== null) {
-      const userId = await db.authenticateUser(auth);
-      if (userId !== null) {
-        req.userId = userId;
-        return next();
-      }
-    }
-    res.sendStatus(401);
-  }
 
-  serv.use(express.json());
-  
-  serv.use(async (err: any, _req: Request, res: Response, _next: NextFunction) => {
-    if (err instanceof StatusCodeError) {
-      errorResponse(res, err.status, err.description);
+  const json = express.json();
+
+  async function authenticateRequest(req: Request, res: Response, next: NextFunction) {
+    try {
+      const auth = getAuthFromRequest(req);
+      if (auth !== null) {
+        const userId = await db.authenticateUser(auth);
+        if (userId !== null) {
+          req.userId = userId;
+          return next();
+        }
+      }
+      res.sendStatus(401);
+    } catch (err) {
+      return next(err);
     }
-    else {
-      errorResponse(res, 500, "internal server error");
-    }
-  });
+  }
 
   // --------------------------------------------------------------------------
   // CreateUser
   // 
-  // POST /user
+  // POST /api/user
   // --------------------------------------------------------------------------
-  serv.post("/user", enforceObjectBody, async (req, res) => {
-    const rb: CreateUserRequest = {
-      username: getBodyString(req.body, "username"),
-      password: getBodyString(req.body, "password"),
-      email: getBodyString(req.body, "email"),
-    } 
-
+  serv.post("/api/user", json, enforceObjectBody, async (req, res, next) => {
     try {
+      const rb: CreateUserRequest = {
+        username: getBodyString(req.body, "username"),
+        password: getBodyString(req.body, "password"),
+        email: getBodyString(req.body, "email"),
+      }
       const token = await db.createUser(rb.username, rb.password, rb.email);
       const response: SessionResponse = { username: rb.username, token };
       res.send(response);
@@ -53,25 +48,23 @@ export default function server(port: number, dbConfig: DBConfig) {
     catch (err) {
       if (err instanceof UsernameDupErr) {
         errorResponse(res, 403, "username in use");
+        return;
       }
-      else {
-        throw err;
-      }
+      return next(err);
     }
   });
 
   // --------------------------------------------------------------------------
   // Login
   // 
-  // POST /auth
+  // POST /api/auth
   // --------------------------------------------------------------------------
-  serv.post("/auth", enforceObjectBody, async (req, res) => {
-    const rb: LoginRequest = {
-      username: getBodyString(req.body, "username"),
-      password: getBodyString(req.body, "password"),
-    } 
-
+  serv.post("/api/auth", json, enforceObjectBody, async (req, res, next) => {
     try {
+      const rb: LoginRequest = {
+        username: getBodyString(req.body, "username"),
+        password: getBodyString(req.body, "password"),
+      }
       const token = await db.loginUser(rb.username, rb.password);
       const response: SessionResponse = { username: rb.username, token };
       res.send(response);
@@ -81,25 +74,39 @@ export default function server(port: number, dbConfig: DBConfig) {
         res.sendStatus(401);
         return;
       }
-      throw err;
+      return next(err);
     }
   });
   
   // --------------------------------------------------------------------------
   // Logout
   // 
-  // DELETE /auth
+  // DELETE /api/auth
   //
   // Authenticated
   // --------------------------------------------------------------------------
-  serv.delete("/auth", async (req, res) => {
+  serv.delete("/api/auth", json, async (req, res, next) => {
     const auth = getAuthFromRequest(req);
     if (auth === null) {
       res.sendStatus(401);
       return
     }
-    await db.logoutUser(auth);
+    try {
+      await db.logoutUser(auth);
+    } catch (err) {
+      return next(err);
+    }
     res.sendStatus(200);
+  });
+
+
+  serv.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    if (err instanceof StatusCodeError) {
+      errorResponse(res, err.status, err.description);
+    }
+    else {
+      errorResponse(res, 500, "internal server error");
+    }
   });
 
   serv.listen(port);

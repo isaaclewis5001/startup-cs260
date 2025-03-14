@@ -13,9 +13,23 @@ export function FormWrapper<C>({form, action}: {form: Form<C>, action: FormActio
     }
 
 
-    // TODO: actually perform a fetch
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await action.act(maybePayload.context, new Response("FormWrapper.tsx mock fetch", {status: 418}), navigator);
+    let response;
+    try {
+      response = await fetch(form.url, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: maybePayload.payload,
+      });
+    } catch (err) {
+      // TODO: tell user that we could not access server
+      console
+      return;
+    }
+
+    await action.act(maybePayload.context, response, navigator);
   }
   
   return (

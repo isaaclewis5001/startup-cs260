@@ -52,6 +52,7 @@ export class MongoDBClient implements DBClient {
     this.users.createIndex("username", { unique: true });
 
     this.auths = this.db.collection("auths");
+    this.auths.createIndex("userId");
     this.auths.createIndex("token", { unique: true });
 
     this.jwtSecret = config.jwtSecret
@@ -103,7 +104,7 @@ export class MongoDBClient implements DBClient {
   private async addAuth(userId: ObjectId): Promise<string> {
     const time = new Date().getTime();
     const token = jwt.sign({userId, time}, this.jwtSecret);
-    this.auths.insertOne({_id: userId, token, time});
+    this.auths.insertOne({userId, token, time});
     return token;
   }
   

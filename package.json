@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "front": "cd frontend && vite",
-    "back": "cd backend && tsc -p . && node dist/index.js",
+    "back": "cd backend && tsc -p . && node dist/backend/src/index.js",
     "build": "cd backend && tsc -p . && cd ../frontend && vite build",
     "lint": "eslint ."
   },

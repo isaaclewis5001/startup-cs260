@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import LoginPageParams from "../behavior/LoginPageParams";
 import { Form, FormWrapper, getFieldById, getFieldByIdNoTrim } from "./FormWrapper";
 import { LoginFormAction } from "./LoginFormAction";
+import { CreateUserRequest } from "../../../shared/api/model";
 
 
 class RegisterFormImpl implements Form<null> {
@@ -29,6 +30,7 @@ class RegisterFormImpl implements Form<null> {
       </div>
     </>)
   }
+
   getPayloadOrError(): { payload: string; context: null} | { errMsg: string; } {
     const username = getFieldById("inputUsername");
     if (!username) {
@@ -45,9 +47,13 @@ class RegisterFormImpl implements Form<null> {
       return {errMsg: "Password required"}
     }
 
-    return {payload: JSON.stringify({username, password}), context: null};
+    const request: CreateUserRequest = {
+      username, password, email,
+    };
+
+    return {payload: JSON.stringify(request), context: null};
   }
-  url = "";
+  url = "/api/user";
   submitButtonText = "Sign up";
 }
 

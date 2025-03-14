@@ -39,7 +39,7 @@ class LoginFormImpl implements Form<null> {
     return {payload: JSON.stringify({username, password}), context: null};
   }
   
-  url = "";
+  url = "/api/auth";
   submitButtonText = "Login";
 }
 
