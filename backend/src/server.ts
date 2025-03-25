@@ -86,7 +86,7 @@ export default function server(port: number, dbConfig: DBConfig) {
   //
   // Authenticated
   // --------------------------------------------------------------------------
-  serv.delete("/api/auth", json, async (req, res, next) => {
+  serv.delete("/api/auth", async (req, res, next) => {
     const auth = getAuthFromRequest(req);
     if (auth === null) {
       res.sendStatus(401);
@@ -124,13 +124,27 @@ export default function server(port: number, dbConfig: DBConfig) {
     }
   })
 
-  
+  // --------------------------------------------------------------------------
+  // List Recent Games
+  // 
+  // GET /api/outcomes
+  // --------------------------------------------------------------------------
+  serv.get("/api/outcomes", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.send(await db.fetchGames());
+    }
+    catch (err) {
+      next(err)
+    }
+  });
+
   serv.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof StatusCodeError) {
       errorResponse(res, err.status, err.description);
     }
     else {
       errorResponse(res, 500, "internal server error");
+      console.log(err);
     }
   });
 
