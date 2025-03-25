@@ -99,7 +99,13 @@ export default function server(port: number, dbConfig: DBConfig) {
     res.sendStatus(200);
   });
 
-
+  // --------------------------------------------------------------------------
+  // Logout
+  // 
+  // DELETE /api/auth
+  //
+  // Authenticated
+  // --------------------------------------------------------------------------
   serv.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof StatusCodeError) {
       errorResponse(res, err.status, err.description);

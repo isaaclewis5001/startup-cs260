@@ -1,6 +1,8 @@
 import { MongoClient, ObjectId, WriteError } from "mongodb"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { ActiveGameRecord, GameRecord } from "./model";
+import { GameOutcome } from "../../shared/api/model";
 
 export type DBConfig = {
   hostname: string,
@@ -20,6 +22,7 @@ export interface DBClient {
   loginUser(username: string, password: string): Promise<string>;
   logoutUser(token: string): Promise<void>;
   authenticateUser(token: string): Promise<ObjectId | null>;
+  fetchGames(): Promise<GameOutcome[] | null>;
 }
 
 const MONGO_ERR_DUP = 11000;
@@ -41,7 +44,12 @@ export class MongoDBClient implements DBClient {
   private db
   private users
   private auths
+  private games
+  private activeGames
+  private outcomes
   private jwtSecret
+  private outcomesCache: null | GameOutcome[]
+  private outcomesCacheExpiresTime
 
   constructor(config: DBConfig) {
     const url = `mongodb+srv://${config.username}:${config.password}@${config.hostname}`;
@@ -55,7 +63,18 @@ export class MongoDBClient implements DBClient {
     this.auths.createIndex("userId");
     this.auths.createIndex("token", { unique: true });
 
-    this.jwtSecret = config.jwtSecret
+    this.games = this.db.collection("games");
+
+    this.activeGames= this.db.collection("activeGames");
+    this.activeGames.createIndex("code", {unique: true});
+
+    this.outcomes = this.db.collection("gameOutcomes");
+    this.outcomes.createIndex("time")
+
+    this.jwtSecret = config.jwtSecret;
+
+    this.outcomesCache = null;
+    this.outcomesCacheExpiresTime = 0;
   }
 
   async createUser(username: string, password: string, email: string) {
@@ -107,5 +126,58 @@ export class MongoDBClient implements DBClient {
     this.auths.insertOne({userId, token, time});
     return token;
   }
+
+  async addGame(game: GameRecord, server_url: string): Promise<string> {
+    const _id = (await this.games.insertOne(game)).insertedId;
+    while (true) {
+      const activeRecord: ActiveGameRecord & {_id: ObjectId} = {server_url, code: generateGameCode(), _id};
+      try {
+        (await this.activeGames.insertOne(activeRecord))
+      }
+      catch (err) {
+        if (err instanceof WriteError && err.code === MONGO_ERR_DUP) {
+          continue;
+        }
+        throw err;
+      }
+    }
+  }
   
+  async fetchGames(): Promise<GameOutcome[] | null> {
+    const time = new Date().getTime();
+    if (this.outcomesCacheExpiresTime > time) {
+      const cursor = this.activeGames.aggregate(
+        [
+          {$sort: {
+            time: -1,
+          }},
+          {$limit: 25},
+          {$lookup: {
+            from: "games",
+            localField: "_id",
+            foreignField: "_id",
+            as: "game",
+          }},
+          {$project: {
+            "game.question": "question",
+            "game.answer1": "answer1",
+            "game.answer2": "answer2",
+            "game.location": "location",
+            _id: false,
+            winner1: true
+          }}
+        ]
+      )
+      const outcomes: any[] = await cursor.toArray();
+      this.outcomesCache = outcomes;
+      this.outcomesCacheExpiresTime = time + 10000;
+    }
+    return this.outcomesCache;
+  }
+}
+
+
+function generateGameCode() {
+  // 36 ^ 8 - 1
+  return Math.floor((Math.random() * 2821109907455)).toString(36);
 }
