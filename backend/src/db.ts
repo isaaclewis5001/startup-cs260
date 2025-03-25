@@ -127,10 +127,10 @@ export class MongoDBClient implements DBClient {
     return token;
   }
 
-  async addGame(game: GameRecord, server_url: string): Promise<string> {
+  async addGame(game: GameRecord, serverUrl: string): Promise<string> {
     const _id = (await this.games.insertOne(game)).insertedId;
     while (true) {
-      const activeRecord: ActiveGameRecord & {_id: ObjectId} = {server_url, code: generateGameCode(), _id};
+      const activeRecord: ActiveGameRecord & {_id: ObjectId} = {serverUrl, code: generateGameCode(), _id};
       try {
         (await this.activeGames.insertOne(activeRecord))
       }

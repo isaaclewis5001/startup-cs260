@@ -22,6 +22,7 @@ export type CreateGameRequest = {
   question: string
   answer1: string
   answer2: string
+  location: string
 }
 
 export type JoinGameRequest = {
@@ -33,13 +34,13 @@ export type ActiveGameResponse = {
   answer1: string,
   answer2: string,
   code: string,
-  server_url: string,
+  serverUrl: string,
 }
 
 export type GameOutcome = {
   question: string,
   answer1: string,
   answer2: string,
-  winner1: boolean,
   location: string,
+  winner1: boolean,
 }

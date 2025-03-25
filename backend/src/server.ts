@@ -1,7 +1,8 @@
 import express, { NextFunction, Response } from 'express';
 import { BadLoginErr, DBConfig, MongoDBClient, UsernameDupErr } from './db';
-import { CreateUserRequest, LoginRequest, SessionResponse } from '../../shared/api/model';
+import { ActiveGameResponse, CreateGameRequest, CreateUserRequest, LoginRequest, SessionResponse } from '../../shared/api/model';
 import { ObjectId } from 'mongodb';
+import { GameRecord } from './model';
 
 
 type Request = express.Request & {userId?: ObjectId};
@@ -100,12 +101,30 @@ export default function server(port: number, dbConfig: DBConfig) {
   });
 
   // --------------------------------------------------------------------------
-  // Logout
+  // Create Game
   // 
-  // DELETE /api/auth
+  // POST /api/games
   //
   // Authenticated
   // --------------------------------------------------------------------------
+  serv.post("/api/games", authenticateRequest, json, enforceObjectBody, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const rb: CreateGameRequest = {
+        question: getBodyString(req.body, "question"),
+        answer1: getBodyString(req.body, "answer1"),
+        answer2: getBodyString(req.body, "answer2"),
+        location: getBodyString(req.body, "location")
+      };
+      const wsUrl = 'not yet implemented';
+      const code = await db.addGame(rb, wsUrl);
+      const resb: ActiveGameResponse = {...rb, serverUrl: wsUrl, code};
+      res.send(resb);
+    } catch (err) {
+      return next(err)
+    }
+  })
+
+  
   serv.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof StatusCodeError) {
       errorResponse(res, err.status, err.description);

@@ -6,7 +6,7 @@ export type GameRecord = {
 }
 
 export type ActiveGameRecord = {
-  server_url: string,
+  serverUrl: string,
   code: string,
 }
 
