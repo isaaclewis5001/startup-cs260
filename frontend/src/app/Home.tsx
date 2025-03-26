@@ -1,10 +1,12 @@
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import "./cards.css"
 import "./forms.css"
 import { Form, FormAction, FormWrapper, getFieldById } from "./FormWrapper"
 import { NavigateFunction } from "react-router-dom";
 import Game from "../game-interface/Game";
 import JungleGame from "../game/JungleGame";
+import config from "../config";
+import { AuthState } from "../model/AuthState";
 
 class JoinByIDForm implements Form<null> {
   create({ children }: { children: ReactNode }): ReactNode {
@@ -25,11 +27,19 @@ class JoinByIDForm implements Form<null> {
     return { payload: {roomId}, context: null }
   }
 
-  url = "";
+  url = config.service + "/api/join";
   submitButtonText = "Join Game";
 }
 
 class CreateGameForm implements Form<null> {
+
+  location: string | null
+
+  constructor(location: string | null) {
+    this.location = location;
+  }
+
+  
   create({ children }: { children: ReactNode; }): ReactNode {
     return (<>
       <div className="formitem">
@@ -51,8 +61,9 @@ class CreateGameForm implements Form<null> {
   getPayloadOrError(): { errMsg: string; } | { payload: any; context: null; } {
     const question = getFieldById("input_game_question");
     const answer1 = getFieldById("input_answer1");
-    const answer2 = getFieldById("input_answer1");
+    const answer2 = getFieldById("input_answer2");
 
+    console.log(this.location);
     if (!question) {
       return { errMsg: "Question required" };
     }
@@ -62,13 +73,17 @@ class CreateGameForm implements Form<null> {
     else if (!answer2) {
       return { errMsg: "Answer 2 required" };
     }
+    else if (!this.location) {
+      return { errMsg: "Not yet ready" };
+    }
 
+    console.log(JSON.stringify({ question, answer1, answer2, location: this.location }));
     return {
-      payload: { question, answer1, answer2 },
+      payload: { question, answer1, answer2, location: this.location },
       context: null,
     }   
   }
-  url = "";
+  url = config.service + "/api/game";
   submitButtonText = "Create Game";
 }
 
@@ -81,20 +96,32 @@ class JoinGameAction implements FormAction<null> {
     this.setGame = setGameFn;
   }
   
-  async act(_context: null, _response: Response, navigator: NavigateFunction): Promise<string | null> {
+  async act(_context: null, response: Response, navigator: NavigateFunction): Promise<string | null> {
+    if (response.status !== 200) {
+      return "Error: " + response.statusText;
+    }
     navigator("/play");
     this.setGame(new JungleGame());
     return null;
   }
 }
 
-export function Home({setGameFn}: {setGameFn: SetGameFn}) {
+export function Home({setGameFn, authState}: {setGameFn: SetGameFn, authState?: AuthState | null}) {
+  const [location, setLocation] = useState<string | null>(null);
+  useEffect(() => {
+    fetch("https://api.country.is/").then(async (response) => {
+      const body = JSON.parse(await response.json());
+      setLocation(body["country"]);
+    }).catch(() => {
+      setLocation("unknown");
+    });  
+  }, [setLocation])
   const action = new JoinGameAction(setGameFn);
   return (
     <div className="main-content">
       <div className="horiz-card-set">
-        <FormWrapper form={new JoinByIDForm()} action={action}/>
-        <FormWrapper form={new CreateGameForm()} action={action}/>
+        <FormWrapper form={new JoinByIDForm()} action={action} authState={authState} />
+        <FormWrapper form={new CreateGameForm(location)} action={action} authState={authState} />
       </div>
     </div>
   )

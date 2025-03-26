@@ -103,11 +103,11 @@ export default function server(port: number, dbConfig: DBConfig) {
   // --------------------------------------------------------------------------
   // Create Game
   // 
-  // POST /api/games
+  // POST /api/game
   //
   // Authenticated
   // --------------------------------------------------------------------------
-  serv.post("/api/games", authenticateRequest, json, enforceObjectBody, async (req: Request, res: Response, next: NextFunction) => {
+  serv.post("/api/game", authenticateRequest, json, enforceObjectBody, async (req: Request, res: Response, next: NextFunction) => {
     try {
       const rb: CreateGameRequest = {
         question: getBodyString(req.body, "question"),
@@ -115,6 +115,7 @@ export default function server(port: number, dbConfig: DBConfig) {
         answer2: getBodyString(req.body, "answer2"),
         location: getBodyString(req.body, "location")
       };
+      console.log(rb);
       const wsUrl = 'not yet implemented';
       const code = await db.addGame(rb, wsUrl);
       const resb: ActiveGameResponse = {...rb, serverUrl: wsUrl, code};

@@ -133,9 +133,10 @@ export class MongoDBClient implements DBClient {
       const activeRecord: ActiveGameRecord & {_id: ObjectId} = {serverUrl, code: generateGameCode(), _id};
       try {
         (await this.activeGames.insertOne(activeRecord))
+        return activeRecord.code;
       }
       catch (err) {
-        if (err instanceof WriteError && err.code === MONGO_ERR_DUP) {
+        if (err.code === MONGO_ERR_DUP) {
           continue;
         }
         throw err;

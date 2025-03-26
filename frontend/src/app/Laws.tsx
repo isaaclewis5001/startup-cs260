@@ -1,23 +1,30 @@
 import { useEffect, useState } from "react"
 import "./Laws.css"
-import GameOutcome from "../../../model/GameOutcome"
+import { GameOutcome } from "../../../shared/api/model";
 
 
-function getLaws(): GameOutcome[] {
-  return [
-    new GameOutcome(0, "Does pineapple go on pizza?", "No!", "Florence, Italy"),
-    new GameOutcome(1, "Summer or winter?", "Winter", "Salt Lake City, Utah"),
-    new GameOutcome(2, "Football or basketball?", "Football", "La Paz, Bolivia"),
-  ]
+async function getLaws(): GameOutcome[] {
+  const response = fetch("");
 }
 
 function Law({outcome}: {outcome: GameOutcome}) {
+  let win, lose;
+  if (outcome.winner1) {
+    win = outcome.answer1;
+    lose = outcome.answer2;
+  }
+  else {
+    win = outcome.answer2;
+    lose = outcome.answer1;
+  }
+
   return (
     <li>
       <div className="law">
         <p>{outcome.question}</p>
-        <p>{outcome.answer}</p>
-        <p>{outcome.settledIn}</p>
+        <p>Answer: {win}</p>
+        <p>Wrong: {lose}</p>
+        <p>{outcome.location}</p>
       </div>
     </li>
   )
@@ -37,7 +44,7 @@ export function Laws() {
         the game outcome in the database, rather than for each individual client who views this page.
         <ul className="laws">
           {laws.map(
-            x => (<Law outcome={x} key={x.id}/>)
+            (x, idx) => (<Law outcome={x} key={idx}/>)
           )}
         </ul>
       </div>

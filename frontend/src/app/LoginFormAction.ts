@@ -1,5 +1,4 @@
 
-import AuthState from "../../../model/AuthState";
 import { NavigateFunction } from "react-router-dom";
 import { FormAction } from "./FormWrapper";
 import AuthEffects from "../behavior/AuthEffects";
@@ -20,7 +19,7 @@ export class LoginFormAction implements FormAction<null> {
     try {
       json = await response.json()
       if (typeof json.username || json.token) {
-        this.authEffects.setAuth(new AuthState(json.username, json.token));
+        this.authEffects.setAuth({username: json.username, token: json.token});
         navigator(this.path);
         return null;
       }

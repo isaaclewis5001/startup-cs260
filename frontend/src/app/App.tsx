@@ -12,7 +12,7 @@ import AuthEffects from "../behavior/AuthEffects";
 import LoginPageParams from '../behavior/LoginPageParams';
 import { useEffect, useState } from 'react';
 import Game from '../game-interface/Game';
-import AuthState from '../../../model/AuthState';
+import { AuthState } from '../model/AuthState';
 
 function AppContent() {
 
@@ -50,7 +50,7 @@ function AppContent() {
     }
     <main>
       <Routes>
-        <Route path="/" element={<Home setGameFn={setGame}/>} />
+        <Route path="/" element={<Home setGameFn={setGame} authState={authEffects.state}/>} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login loginParams={loginParams}/>} />
         <Route path="/register" element={<Register loginParams={loginParams}/>} />

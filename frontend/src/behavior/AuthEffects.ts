@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import AuthState from "../../../model/AuthState";
+import { AuthState } from "../model/AuthState";
 
 export default class AuthEffects {
   state;
@@ -11,7 +11,7 @@ export default class AuthEffects {
       const user = localStorage.getItem("auth-user");
       const token = localStorage.getItem("auth-token");
       if (user && token) {
-        this.updateFn(new AuthState(user, token));
+        this.updateFn({username: user, token});
       }
 
     }, [this.updateFn])

@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Form, FormWrapper, getFieldById, getFieldByIdNoTrim } from "./FormWrapper";
 import LoginPageParams from "../behavior/LoginPageParams";
 import { LoginFormAction } from "./LoginFormAction";
+import config from "../config";
 
 class LoginFormImpl implements Form<null> {
   create({children}: { children: ReactNode; }): ReactNode {
@@ -25,7 +26,7 @@ class LoginFormImpl implements Form<null> {
     </>);
   }
 
-  getPayloadOrError(): { payload: string; context: null } | { errMsg: string; } {
+  getPayloadOrError(): { payload: any; context: null } | { errMsg: string; } {
     const username = getFieldById("inputUsername");
     if (!username) {
       return {errMsg: "Username required"}
@@ -36,10 +37,10 @@ class LoginFormImpl implements Form<null> {
       return {errMsg: "Password required"}
     }
 
-    return {payload: JSON.stringify({username, password}), context: null};
+    return {payload: {username, password}, context: null};
   }
   
-  url = "/api/auth";
+  url = config.service + "/api/auth";
   submitButtonText = "Login";
 }
 

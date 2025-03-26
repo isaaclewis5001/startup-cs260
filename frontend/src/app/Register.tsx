@@ -4,6 +4,7 @@ import LoginPageParams from "../behavior/LoginPageParams";
 import { Form, FormWrapper, getFieldById, getFieldByIdNoTrim } from "./FormWrapper";
 import { LoginFormAction } from "./LoginFormAction";
 import { CreateUserRequest } from "../../../shared/api/model";
+import config from "../config";
 
 
 class RegisterFormImpl implements Form<null> {
@@ -31,7 +32,7 @@ class RegisterFormImpl implements Form<null> {
     </>)
   }
 
-  getPayloadOrError(): { payload: string; context: null} | { errMsg: string; } {
+  getPayloadOrError(): { payload: any; context: null} | { errMsg: string; } {
     const username = getFieldById("inputUsername");
     if (!username) {
       return {errMsg: "Username required"}
@@ -51,9 +52,9 @@ class RegisterFormImpl implements Form<null> {
       username, password, email,
     };
 
-    return {payload: JSON.stringify(request), context: null};
+    return {payload: request, context: null};
   }
-  url = "/api/user";
+  url = config.service + "/api/user";
   submitButtonText = "Sign up";
 }
 

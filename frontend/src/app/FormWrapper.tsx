@@ -1,7 +1,8 @@
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { ReactNode } from "react";
+import { AuthState } from "../model/AuthState";
 
-export function FormWrapper<C>({form, action}: {form: Form<C>, action: FormAction<C>}) {
+export function FormWrapper<C>({form, action, authState = null}: {form: Form<C>, action: FormAction<C>, authState?: AuthState | null}) {
   const navigator = useNavigate();
   
   async function onClick() {
@@ -14,14 +15,19 @@ export function FormWrapper<C>({form, action}: {form: Form<C>, action: FormActio
 
 
     let response;
+    let headers: any = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    }
+    if (authState) {
+      headers["Authorization"] = authState.token
+    }
     try {
+      console.log(JSON.stringify(maybePayload.payload));
       response = await fetch(form.url, {
         method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        body: maybePayload.payload,
+        headers,
+        body: JSON.stringify(maybePayload.payload),
       });
     } catch (err) {
       // TODO: tell user that we could not access server
@@ -33,7 +39,7 @@ export function FormWrapper<C>({form, action}: {form: Form<C>, action: FormActio
   }
   
   return (
-    <form className="formcard" action={"javacript:void(0);"}>
+    <form className="formcard" action={"javacript:void(0)"}>
       <form.create>
         <button onClick={onClick}>{form.submitButtonText}</button>
       </form.create>
