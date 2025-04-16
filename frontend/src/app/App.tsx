@@ -31,9 +31,9 @@ function AppContent() {
   }, [location, navigator, game, authState]);
 
   const authEffects = new AuthEffects(authState, authUpdate);
-  const loginParams = new LoginPageParams(authEffects);
+  const loginParams = new LoginPageParams(authEffects, undefined, navigator);
 
-  const focusMode = location.pathname === "/play";
+  const focusMode = location.pathname === "/play" || location.pathname === "/login" || location.pathname === "/register";
 
   return (<>
     <Header authEffects={authEffects} loginButtonVisible={!focusMode}/>
@@ -56,7 +56,7 @@ function AppContent() {
         <Route path="/register" element={<Register loginParams={loginParams}/>} />
         <Route path="/laws" element={<Laws />} />
         <Route path="/play" element={<GameWindow game={game}/>} />
-        <Route path='*' element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </main>
     <footer>

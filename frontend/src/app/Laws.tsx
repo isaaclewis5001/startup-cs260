@@ -3,8 +3,9 @@ import "./Laws.css"
 import { GameOutcome } from "../../../shared/api/model";
 
 
-async function getLaws(): GameOutcome[] {
-  const response = fetch("");
+async function getLaws(): Promise<GameOutcome[]> {
+  const response = await fetch("/api/outcomes");
+  return await response.json();
 }
 
 function Law({outcome}: {outcome: GameOutcome}) {
@@ -33,15 +34,13 @@ function Law({outcome}: {outcome: GameOutcome}) {
 export function Laws() {
   const [laws, updateLaws] = useState<GameOutcome[]>([]);
   useEffect(() => {
-    updateLaws(getLaws())
+    getLaws().then((lawsResponse) => {
+      
+    }).catch()
   }, [updateLaws])
   return (
     <div className="main-content">
       <div>
-        Database content stored here.
-        Third party API calls are used to obtain the location information (from the IP address of the user who created the game).
-        For the sake of user privacy, this IP to location conversion is done before storing
-        the game outcome in the database, rather than for each individual client who views this page.
         <ul className="laws">
           {laws.map(
             (x, idx) => (<Law outcome={x} key={idx}/>)

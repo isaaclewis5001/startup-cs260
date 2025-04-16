@@ -1,9 +1,15 @@
+import { ActiveGameResponse } from "../../../shared/api/model";
 import { KeyboardController } from "../game-interface/controllers";
 import Game from "../game-interface/Game";
 import GameResources from "../game-interface/GameResources";
 import JungleGameState from "./JungleGameState";
 
 export default class JungleGame implements Game {
+  activeGame: ActiveGameResponse;
+  constructor(activeGame: ActiveGameResponse) {
+    this.activeGame = activeGame;
+  }
+  
   start(resources: GameResources): JungleGameState | null {    
     let primaryContext = resources.primaryCanvas()?.getContext('webgl2');
     if (primaryContext == null) {

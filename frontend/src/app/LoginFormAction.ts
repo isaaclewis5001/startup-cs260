@@ -12,6 +12,10 @@ export class LoginFormAction implements FormAction<null> {
   constructor(params: LoginPageParams) {
     this.authEffects = params.authEffects;
     this.path = params.destPath;
+
+    if (params.authEffects.state !== null) {
+      params.navigate(params.destPath);
+    }
   }
   
   async act(_context: null, response: Response, navigator: NavigateFunction): Promise<string | null> {

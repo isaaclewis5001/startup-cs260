@@ -1,9 +1,7 @@
 import express, { NextFunction, Response } from 'express';
 import { BadLoginErr, DBConfig, MongoDBClient, UsernameDupErr } from './db';
-import { ActiveGameResponse, CreateGameRequest, CreateUserRequest, LoginRequest, SessionResponse } from '../../shared/api/model';
+import { ActiveGameResponse, CreateGameRequest, CreateUserRequest, JoinGameRequest, LoginRequest, SessionResponse } from '../../shared/api/model';
 import { ObjectId } from 'mongodb';
-import { GameRecord } from './model';
-
 
 type Request = express.Request & {userId?: ObjectId};
 
@@ -115,7 +113,6 @@ export default function server(port: number, dbConfig: DBConfig) {
         answer2: getBodyString(req.body, "answer2"),
         location: getBodyString(req.body, "location")
       };
-      console.log(rb);
       const wsUrl = 'not yet implemented';
       const code = await db.addGame(rb, wsUrl);
       const resb: ActiveGameResponse = {...rb, serverUrl: wsUrl, code};
@@ -123,7 +120,29 @@ export default function server(port: number, dbConfig: DBConfig) {
     } catch (err) {
       return next(err)
     }
-  })
+  });
+
+  // --------------------------------------------------------------------------
+  // Join Game
+  // 
+  // POST /api/join
+  //
+  // Authenticated
+  // --------------------------------------------------------------------------
+  serv.post("/api/join", authenticateRequest, json, enforceObjectBody, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const rb: JoinGameRequest = {
+          code: getBodyString(req.body, "code")
+      };
+      const resb = await db.joinGame(rb.code);
+      if (resb === null) {
+        throw new StatusCodeError(404, "not found");
+      }
+      res.send(resb);
+    } catch (err) {
+      return next(err)
+    }
+  });
 
   // --------------------------------------------------------------------------
   // List Recent Games
@@ -132,7 +151,11 @@ export default function server(port: number, dbConfig: DBConfig) {
   // --------------------------------------------------------------------------
   serv.get("/api/outcomes", async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.send(await db.fetchGames());
+      const outcomes = await db.fetchGames();
+      if (outcomes === null) {
+        return next(new StatusCodeError(500, ""));
+      }
+      res.send(outcomes);
     }
     catch (err) {
       next(err)

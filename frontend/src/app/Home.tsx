@@ -7,6 +7,7 @@ import Game from "../game-interface/Game";
 import JungleGame from "../game/JungleGame";
 import config from "../config";
 import { AuthState } from "../model/AuthState";
+import { ActiveGameResponse } from "../../../shared/api/model";
 
 class JoinByIDForm implements Form<null> {
   create({ children }: { children: ReactNode }): ReactNode {
@@ -20,11 +21,11 @@ class JoinByIDForm implements Form<null> {
   }
 
   getPayloadOrError(): { errMsg: string } | { payload: any; context: null } {
-    const roomId = getFieldById("input_room_id");
-    if (!roomId) {
+    const code = getFieldById("input_room_id");
+    if (!code) {
       return { errMsg: "Room ID required" };
     }
-    return { payload: {roomId}, context: null }
+    return { payload: {code}, context: null }
   }
 
   url = config.service + "/api/join";
@@ -38,7 +39,6 @@ class CreateGameForm implements Form<null> {
   constructor(location: string | null) {
     this.location = location;
   }
-
   
   create({ children }: { children: ReactNode; }): ReactNode {
     return (<>
@@ -63,7 +63,6 @@ class CreateGameForm implements Form<null> {
     const answer1 = getFieldById("input_answer1");
     const answer2 = getFieldById("input_answer2");
 
-    console.log(this.location);
     if (!question) {
       return { errMsg: "Question required" };
     }
@@ -77,7 +76,6 @@ class CreateGameForm implements Form<null> {
       return { errMsg: "Not yet ready" };
     }
 
-    console.log(JSON.stringify({ question, answer1, answer2, location: this.location }));
     return {
       payload: { question, answer1, answer2, location: this.location },
       context: null,
@@ -100,8 +98,9 @@ class JoinGameAction implements FormAction<null> {
     if (response.status !== 200) {
       return "Error: " + response.statusText;
     }
+    const responseBody: ActiveGameResponse = await response.json();
     navigator("/play");
-    this.setGame(new JungleGame());
+    this.setGame(new JungleGame(responseBody));
     return null;
   }
 }
@@ -110,7 +109,7 @@ export function Home({setGameFn, authState}: {setGameFn: SetGameFn, authState?: 
   const [location, setLocation] = useState<string | null>(null);
   useEffect(() => {
     fetch("https://api.country.is/").then(async (response) => {
-      const body = JSON.parse(await response.json());
+      const body = await response.json();
       setLocation(body["country"]);
     }).catch(() => {
       setLocation("unknown");

@@ -2,7 +2,7 @@ import { MongoClient, ObjectId, WriteError } from "mongodb"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { ActiveGameRecord, GameRecord } from "./model";
-import { GameOutcome } from "../../shared/api/model";
+import { ActiveGameResponse, GameOutcome } from "../../shared/api/model";
 
 export type DBConfig = {
   hostname: string,
@@ -22,7 +22,8 @@ export interface DBClient {
   loginUser(username: string, password: string): Promise<string>;
   logoutUser(token: string): Promise<void>;
   authenticateUser(token: string): Promise<ObjectId | null>;
-  fetchGames(): Promise<GameOutcome[] | null>;
+  fetchGames(): Promise<GameOutcome[]>;
+  joinGame(code: string): Promise<ActiveGameResponse | null>;
 }
 
 const MONGO_ERR_DUP = 11000;
@@ -48,7 +49,7 @@ export class MongoDBClient implements DBClient {
   private activeGames
   private outcomes
   private jwtSecret
-  private outcomesCache: null | GameOutcome[]
+  private outcomesCache: GameOutcome[]
   private outcomesCacheExpiresTime
 
   constructor(config: DBConfig) {
@@ -73,7 +74,7 @@ export class MongoDBClient implements DBClient {
 
     this.jwtSecret = config.jwtSecret;
 
-    this.outcomesCache = null;
+    this.outcomesCache = [];
     this.outcomesCacheExpiresTime = 0;
   }
 
@@ -143,8 +144,28 @@ export class MongoDBClient implements DBClient {
       }
     }
   }
+
+  async joinGame(code: string): Promise<ActiveGameResponse | null> {
+
+    const activeGame = await this.activeGames.findOne({code}, {projection: {_id: 1, serverUrl: 1}})
+    if (activeGame === null) {
+      return null;
+    }
+    const game = await this.activeGames.findOne({_id: activeGame._id}, {projection: {_id: 0, question: 1, answer1: 1, answer2: 1, location: 1}});
+    if (game === null) {
+      return null;
+    }
+    return {
+      question: game.question,
+      answer1: game.answer1,
+      answer2: game.answer2,
+      serverUrl: game.serverUrl,
+      code
+    };
+
+  }
   
-  async fetchGames(): Promise<GameOutcome[] | null> {
+  async fetchGames(): Promise<GameOutcome[]> {
     const time = new Date().getTime();
     if (this.outcomesCacheExpiresTime > time) {
       const cursor = this.activeGames.aggregate(

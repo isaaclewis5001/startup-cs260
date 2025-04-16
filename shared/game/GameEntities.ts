@@ -1,6 +1,5 @@
 export default class GameEntities {
-  monkeys: Monkeys
-  bananas: Bananas
+  monkeys: Monkeys = new Monkeys();
   
   update(deltaTime: number) {
     updateDynamicObjects(
@@ -8,13 +7,6 @@ export default class GameEntities {
       this.monkeys.posn,
       this.monkeys.vel,
       this.monkeys.accel,
-      deltaTime
-    );
-    updateDynamicObjects(
-      this.bananas.count,
-      this.bananas.posn,
-      this.bananas.vel,
-      this.bananas.accel,
       deltaTime
     );
   }
@@ -56,8 +48,8 @@ class EntityIDMap {
   }
 }
 
-class Vec2Col {
-  items: number[]
+export class Vec2Col {
+  items: number[] = []
 
   get(index: number): [x: number, y: number] {
     return [this.items[index * 2], this.items[index * 2 + 1]];
@@ -76,26 +68,20 @@ class Vec2Col {
 }
 
 
-class PrimaryIDCol {}
 
-class ForeignIDCol {}
-
-class Monkeys {
+export class Monkeys {
   count: number
   // Bananas need to reference their corresponding monkeys, so we use stable ids.
-  id: number[]
-  posn: Vec2Col
-  vel: Vec2Col
-  accel: Vec2Col
-}
+  id: number[];
+  posn: Vec2Col;
+  vel: Vec2Col;
+  accel: Vec2Col;
 
-class Bananas {
-  count: number
-  posn: Vec2Col
-  vel: Vec2Col
-  accel: Vec2Col
-  stamina: [number] 
-  ownerID: [number]
+  constructor() {
+    this.posn = new Vec2Col();
+    this.vel = new Vec2Col();
+    this.accel = new Vec2Col();
+  }
 }
 
 // Dynamic objects have positions, velocities, and accelerations.

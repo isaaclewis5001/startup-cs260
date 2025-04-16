@@ -1,12 +1,12 @@
-import JungleGameState from "../JungleGameState";
+import JungleGameState from "./JungleGameState";
 
 export default class BackgroundRenderer {
-  private shaderTestBG: WebGLProgram;
+  private shader: WebGLProgram;
   private vxBuffer: WebGLBuffer;
   private vxBufferAttrLoc: GLint;
 
   constructor(game: JungleGameState) {
-    const shaderVertTestBG = game.loadShader(game.gl.VERTEX_SHADER,
+    const shaderVtx = game.loadVtxShader(
       `# version 300 es
       
       in vec2 position;
@@ -17,7 +17,7 @@ export default class BackgroundRenderer {
         gl_Position = vec4(position, 0.0, 1.0);
       }
     `);
-    const shaderFragTestBG = game.loadShader(game.gl.FRAGMENT_SHADER,
+    const shaderFrag = game.loadFragShader(
       `# version 300 es
       precision highp float;
 
@@ -29,8 +29,8 @@ export default class BackgroundRenderer {
       }
     `);
 
-    this.shaderTestBG = game.createShaderProg([shaderVertTestBG, shaderFragTestBG]);
-    this.vxBufferAttrLoc = game.gl.getAttribLocation(this.shaderTestBG, "position");
+    this.shader = game.createShaderProg([shaderVtx, shaderFrag]);
+    this.vxBufferAttrLoc = game.gl.getAttribLocation(this.shader, "position");
     const vxBuffer = game.gl.createBuffer()
     if (!vxBuffer) {
       throw new Error("could not create buffer");
@@ -54,7 +54,7 @@ export default class BackgroundRenderer {
   }
 
   render(game: JungleGameState) {
-    game.gl.useProgram(this.shaderTestBG);
+    game.gl.useProgram(this.shader);
     game.gl.drawArrays(game.gl.TRIANGLES, 0, 6);
   }
 }
