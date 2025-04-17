@@ -21,8 +21,17 @@ export class LoginFormAction implements FormAction<null> {
   async act(_context: null, response: Response, navigator: NavigateFunction): Promise<string | null> {
     let json;
     try {
+      if (response.status === 401) {
+        return "bad credentials";
+      }
+      if (response.status === 403) {
+        return "user exists";
+      }
+      if (response.status !== 200){
+        return "Error " + response.statusText;
+      }
       json = await response.json()
-      if (typeof json.username || json.token) {
+      if (typeof json.username === "string" && typeof json.token === "string") {
         this.authEffects.setAuth({username: json.username, token: json.token});
         navigator(this.path);
         return null;

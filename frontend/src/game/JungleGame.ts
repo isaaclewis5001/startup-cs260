@@ -11,11 +11,15 @@ export default class JungleGame implements Game {
   }
   
   start(resources: GameResources): JungleGameState | null {    
-    let primaryContext = resources.primaryCanvas()?.getContext('webgl2');
+    let primaryCanvas = resources.primaryCanvas();
+    if (primaryCanvas === null) {
+      return null;
+    }
+    let primaryContext = primaryCanvas.getContext('webgl2');
     if (primaryContext == null) {
       return null;
     }
-    return new JungleGameState(primaryContext);
+    return new JungleGameState(primaryContext, primaryCanvas);
   }
 }
 

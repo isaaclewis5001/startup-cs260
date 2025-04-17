@@ -1,6 +1,6 @@
 import express, { NextFunction, Response } from 'express';
 import { BadLoginErr, DBConfig, MongoDBClient, UsernameDupErr } from './db';
-import { ActiveGameResponse, CreateGameRequest, CreateUserRequest, JoinGameRequest, LoginRequest, SessionResponse } from '../../shared/api/model';
+import { ActiveGameResponse, CreateGameRequest, CreateUserRequest, JoinGameRequest, LoginRequest, SessionResponse } from './shared/api/model';
 import { ObjectId } from 'mongodb';
 
 type Request = express.Request & {userId?: ObjectId};
@@ -8,7 +8,6 @@ type Request = express.Request & {userId?: ObjectId};
 export default function server(port: number, dbConfig: DBConfig) {
   const serv = express();
   const db = new MongoDBClient(dbConfig);
- 
 
   const json = express.json();
 
@@ -172,6 +171,8 @@ export default function server(port: number, dbConfig: DBConfig) {
     }
   });
 
+
+  serv.use(express.static('public'));
   serv.listen(port);
 }
 

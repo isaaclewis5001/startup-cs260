@@ -2,25 +2,33 @@ import { KeyboardController, TouchController } from "../game-interface/controlle
 import GameState from "../game-interface/GameState";
 import { frameLoop, KBController } from "./JungleGame";
 import BackgroundRenderer from "./BackgroundRenderer";
-import { SpritesetRenderer } from "./SpritesheetRenderer";
+import { Spriteset, SpritesetRenderer } from "./SpritesheetRenderer";
 import { Monkeys } from "../../../shared/game/GameEntities";
 
 export default class JungleGameState implements GameState {
     gl: WebGL2RenderingContext;
+    private canvas: HTMLCanvasElement;
     private shouldStop: boolean;
 
     private bg: BackgroundRenderer;
     private sprites: SpritesetRenderer;
     private monkeys: Monkeys;
+    private spritesets: Spriteset[] = [];
     
-    constructor(primaryContext: WebGL2RenderingContext) {
+    constructor(primaryContext: WebGL2RenderingContext, canvas: HTMLCanvasElement) {
         this.gl = primaryContext;
+        this.canvas = canvas;
         this.shouldStop = false;
         this.bg = new BackgroundRenderer(this);
         this.sprites = new SpritesetRenderer(this);
         this.monkeys = new Monkeys();
         
         frameLoop(this);
+    }
+
+    async init() {
+        const monkeyTex = await this.loadTexture("/assets/monkey.png");
+        this.spritesets = [new Spriteset(monkeyTex, this.monkeys.posn, this.monkeys.posn, this.monkeys.posn, [-0.5, 0], -0.5)];
     }
 
     getKeyboardController(): KeyboardController | null {
@@ -37,7 +45,15 @@ export default class JungleGameState implements GameState {
 
     renderFrame(_deltaTime: number): boolean {
         this.bg.render(this);
-        this.sprites.render(this);
+
+        const cameraRadius = 5.0;
+        const viewportWidth = this.canvas.clientWidth;
+        const viewportHeight = this.canvas.clientHeight;
+        const viewportRadius = Math.sqrt(viewportWidth * viewportWidth + viewportHeight * viewportHeight);
+        const normFactor = cameraRadius / viewportRadius;
+        const camScale: [number, number] = [viewportWidth * normFactor, viewportHeight * normFactor];
+
+        this.sprites.render(this, this.spritesets, [0, 0], camScale);
         return !this.shouldStop;
     }
 
@@ -97,8 +113,27 @@ export default class JungleGameState implements GameState {
         });
     }
 
-    createInstancedBuffer(): WebGLBuffer {
-        this.gl.createBuffer()
-        throw new Error("Method not implemented.");
+    createBuffer(): WebGLBuffer {
+        let buffer = this.gl.createBuffer()
+        if (buffer === null) {
+            throw new Error("Could not create buffer");
+        }
+        return buffer;
+    }
+    
+    getUniform(prog: WebGLProgram, name: string): WebGLUniformLocation {
+        let uniform = this.gl.getUniformLocation(prog, name);
+        if (uniform === null) {
+            throw new Error(`Uniform ${name} not found`)
+        }
+        return uniform;
+    }
+
+    getAttribute(prog: WebGLProgram, name: string): GLint {
+        let attr = this.gl.getAttribLocation(prog, name);
+        if (attr < 0) {
+            throw new Error(`Uniform ${name} not found`)
+        }
+        return attr;
     }
 }

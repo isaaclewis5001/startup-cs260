@@ -1,8 +1,9 @@
+import { GLArrayBuffer, GLArrayBufferAccess } from "./GLArrayBuffer";
 import JungleGameState from "./JungleGameState";
 
 export default class BackgroundRenderer {
   private shader: WebGLProgram;
-  private vxBuffer: WebGLBuffer;
+  private vxBuffer: GLArrayBuffer;
   private vxBufferAttrLoc: GLint;
 
   constructor(game: JungleGameState) {
@@ -30,31 +31,26 @@ export default class BackgroundRenderer {
     `);
 
     this.shader = game.createShaderProg([shaderVtx, shaderFrag]);
-    this.vxBufferAttrLoc = game.gl.getAttribLocation(this.shader, "position");
-    const vxBuffer = game.gl.createBuffer()
-    if (!vxBuffer) {
-      throw new Error("could not create buffer");
-    }
-    this.vxBuffer = vxBuffer;
+    game.gl.useProgram(this.shader);
+    this.vxBufferAttrLoc = game.getAttribute(this.shader, "position");
+    this.vxBuffer = new GLArrayBuffer(game.gl);
 
-    const vbuf = new Float32Array([
+    new GLArrayBufferAccess(this.vxBuffer, game.gl).dataF32(new Float32Array([
       -1.0, -1.0, 
       -1.0, 1.0,
       1.0, -1.0,
       1.0, -1.0,
       -1.0, 1.0,
       1.0, 1.0
-    ]);
-    
-    game.gl.bindBuffer(game.gl.ARRAY_BUFFER, this.vxBuffer);
-    game.gl.bufferData(game.gl.ARRAY_BUFFER, vbuf, game.gl.STATIC_DRAW);
-
-    game.gl.enableVertexAttribArray(this.vxBufferAttrLoc);
-    game.gl.vertexAttribPointer(this.vxBufferAttrLoc, 2, game.gl.FLOAT, false, 0, 0);
+    ]), game.gl.STATIC_DRAW);
   }
 
   render(game: JungleGameState) {
     game.gl.useProgram(this.shader);
+    game.gl.enableVertexAttribArray(this.vxBufferAttrLoc);
+    game.gl.vertexAttribDivisor(this.vxBufferAttrLoc, 0);
+    new GLArrayBufferAccess(this.vxBuffer, game.gl).attach(this.vxBufferAttrLoc, 2, game.gl.FLOAT);
     game.gl.drawArrays(game.gl.TRIANGLES, 0, 6);
+    game.gl.disableVertexAttribArray(this.vxBufferAttrLoc);
   }
 }

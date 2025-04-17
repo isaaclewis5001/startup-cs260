@@ -2,7 +2,7 @@ import { MongoClient, ObjectId, WriteError } from "mongodb"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { ActiveGameRecord, GameRecord } from "./model";
-import { ActiveGameResponse, GameOutcome } from "../../shared/api/model";
+import { ActiveGameResponse, GameOutcome } from "./shared/api/model";
 
 export type DBConfig = {
   hostname: string,

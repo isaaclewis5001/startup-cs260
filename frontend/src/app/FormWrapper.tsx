@@ -35,7 +35,10 @@ export function FormWrapper<C>({form, action, authState = null}: {form: Form<C>,
       return;
     }
 
-    await action.act(maybePayload.context, response, navigator);
+    const res = await action.act(maybePayload.context, response, navigator);
+    if (res !== null) {
+      window.alert(res);
+    }
   }
   
   return (
