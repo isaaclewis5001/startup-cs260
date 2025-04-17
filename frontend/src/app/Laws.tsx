@@ -22,10 +22,10 @@ function Law({outcome}: {outcome: GameOutcome}) {
   return (
     <li>
       <div className="law">
-        <p>{outcome.question}</p>
-        <p>Answer: {win}</p>
-        <p>Wrong: {lose}</p>
-        <p>{outcome.location}</p>
+        <p>Question: <i>{outcome.question}</i></p>
+        <p>Winning Answer: <i>{win}</i></p>
+        <p>Loser: <i>{lose}</i></p>
+        <p>Location: <i>{outcome.location}</i></p>
       </div>
     </li>
   )
@@ -35,7 +35,7 @@ export function Laws() {
   const [laws, updateLaws] = useState<GameOutcome[]>([]);
   useEffect(() => {
     getLaws().then((lawsResponse) => {
-      
+      updateLaws(lawsResponse)
     }).catch()
   }, [updateLaws])
   return (

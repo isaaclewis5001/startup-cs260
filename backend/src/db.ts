@@ -130,6 +130,11 @@ export class MongoDBClient implements DBClient {
 
   async addGame(game: GameRecord, serverUrl: string): Promise<string> {
     const _id = (await this.games.insertOne(game)).insertedId;
+    try {
+      this.outcomes.insertOne({_id, winner1: false, time: Date.now()});
+    } catch {
+      // ignore
+    }
     while (true) {
       const activeRecord: ActiveGameRecord & {_id: ObjectId} = {serverUrl, code: generateGameCode(), _id};
       try {
@@ -142,6 +147,7 @@ export class MongoDBClient implements DBClient {
         }
         throw err;
       }
+      
     }
   }
 
@@ -167,32 +173,40 @@ export class MongoDBClient implements DBClient {
   
   async fetchGames(): Promise<GameOutcome[]> {
     const time = new Date().getTime();
-    if (this.outcomesCacheExpiresTime > time) {
-      const cursor = this.activeGames.aggregate(
-        [
-          {$sort: {
-            time: -1,
-          }},
-          {$limit: 25},
-          {$lookup: {
-            from: "games",
-            localField: "_id",
-            foreignField: "_id",
-            as: "game",
-          }},
-          {$project: {
-            "game.question": "question",
-            "game.answer1": "answer1",
-            "game.answer2": "answer2",
-            "game.location": "location",
-            _id: false,
-            winner1: true
-          }}
-        ]
-      )
-      const outcomes: any[] = await cursor.toArray();
-      this.outcomesCache = outcomes;
-      this.outcomesCacheExpiresTime = time + 10000;
+    if (this.outcomesCacheExpiresTime < time) {
+      try {
+        const cursor = this.outcomes.aggregate(
+          [
+            {$sort: {
+              time: -1,
+            }},
+            {$limit: 25},
+            {$lookup: {
+              from: "games",
+              localField: "_id",
+              foreignField: "_id",
+              as: "game",
+            }},
+            {$set: {
+              "game": {$first: "$game"},
+            }},
+            {$project: {
+              "question": "$game.question",
+              "answer1": "$game.answer1",
+              "answer2": "$game.answer2",
+              "location": "$game.location",
+              _id: false,
+            }}
+          ]
+        )
+        const outcomes: any[] = await cursor.toArray();
+        this.outcomesCache = outcomes;
+        this.outcomesCacheExpiresTime = time + 10000;
+      }
+      catch {
+        console.log("failed to fetch from db")
+        // skip
+      }
     }
     return this.outcomesCache;
   }

@@ -10,7 +10,11 @@ export default class JungleGame implements Game {
     this.activeGame = activeGame;
   }
   
-  start(resources: GameResources): JungleGameState | null {    
+  start(resources: GameResources): JungleGameState | null {
+    const code = this.activeGame.code;
+    setTimeout(()=>{
+      window.alert("Game code: " + code);
+    }, 500)
     let primaryCanvas = resources.primaryCanvas();
     if (primaryCanvas === null) {
       return null;

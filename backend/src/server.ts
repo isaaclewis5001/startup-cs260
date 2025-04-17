@@ -148,7 +148,7 @@ export default function server(port: number, dbConfig: DBConfig) {
   // 
   // GET /api/outcomes
   // --------------------------------------------------------------------------
-  serv.get("/api/outcomes", async (req: Request, res: Response, next: NextFunction) => {
+  serv.get("/api/outcomes", async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const outcomes = await db.fetchGames();
       if (outcomes === null) {

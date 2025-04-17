@@ -100,7 +100,6 @@ class JoinGameAction implements FormAction<null> {
     }
     const responseBody: ActiveGameResponse = await response.json();
     navigator("/play");
-    window.alert("Game code: " + responseBody.code);
     this.setGame(new JungleGame(responseBody));
     return null;
   }
